@@ -14,7 +14,7 @@ const part1 = (rawInput) => {
 
   for (let [i, line] of input.entries()) {
     for (let config of configs) {
-      if ([...line.matchAll(config.pattern)].some(([_, value]) =>  value > config.limit)) {
+      if ([...line.matchAll(config.pattern)].some(([_, value]) => value > config.limit)) {
         sum += i + 1;
         break;
       }
@@ -23,21 +23,17 @@ const part1 = (rawInput) => {
   return input.length * (input.length + 1) / 2 - sum
 };
 
-const part2 = (rawInput) => {
-  const input = parseInput(rawInput);
-  let sum = 0;
+const patterns = [
+  /(\d+) red/g,
+  /(\d+) green/g,
+  /(\d+) blue/g
+]
 
-  for (let [i, line] of input.entries()) {
-    let power = 1;
-    for (let config of configs) {
-      const maxCubes = Math.max(...[...line.matchAll(config.pattern)].map(([_, value]) =>  value))
-      power *= maxCubes;
-    }
-    sum += power;
-
-  }
-  return sum;
-};
+const part2 = (rawInput) => parseInput(rawInput)
+  .reduce((sum, line) => sum + patterns
+    .reduce((power, pattern) => power * Math.max(...[...line.matchAll(pattern)].map(([_, cubes]) => cubes)),
+      1),
+    0);
 
 run({
   part1: {
