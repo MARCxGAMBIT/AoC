@@ -27,7 +27,7 @@ const patterns = [
   /(\d+) red/g,
   /(\d+) green/g,
   /(\d+) blue/g
-]
+];
 
 const part2 = (rawInput) => parseInput(rawInput)
   .reduce((sum, line) => sum + patterns

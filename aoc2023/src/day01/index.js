@@ -8,17 +8,13 @@ const part1 = (rawInput) => {
   const regexBegin = /.*?(\d)/;
   const regexEnd = /.*(\d)/;
 
-  const firstDigit = input
-      .map((line) => line.match(regexBegin))
-      .map(([, a]) => +a);
+  let sum = 0;
 
-  const lastDigit = input
-      .map((line) => line.match(regexEnd))
-      .map(([, a]) => +a);
-
-  const sum = firstDigit
-      .map((a, i) => a * 10 + lastDigit[i])
-      .reduce((acc, cur) => acc + cur, 0);
+  for (let line of input) {
+    let first = line.match(regexBegin);
+    let last = line.match(regexEnd);
+    sum += Number(first[1]) * 10 + Number(last[1]);
+  }
 
   return sum;
 };
@@ -40,15 +36,15 @@ const part2 = (rawInput) => {
     "eight": 8,
     "nine": 9,
     "zero": 0
-  }
+  };
 
   let sum = 0;
 
   for (let line of input) {
     let first = line.match(regexBegin);
     let last = line.match(regexEnd);
-    let firstDigit = numMap[first[1]] ?? +first[1];
-    let lastDigit = numMap[last[1]] ?? +last[1];
+    let firstDigit = numMap[first[1]] ?? Number(first[1]);
+    let lastDigit = numMap[last[1]] ?? Number(last[1]);
     sum += firstDigit * 10 + lastDigit;
   }
 
@@ -58,19 +54,19 @@ const part2 = (rawInput) => {
 run({
   part1: {
     tests: [
-      // {
-      //   input: ``,
-      //   expected: "",
-      // },
+      {
+        input: `one2three`,
+        expected: 22,
+      },
     ],
     solution: part1,
   },
   part2: {
     tests: [
-      // {
-      //   input: ``,
-      //   expected: "",
-      // },
+      {
+        input: `eighthree`,
+        expected: 83,
+      },
     ],
     solution: part2,
   },
