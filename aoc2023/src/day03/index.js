@@ -36,6 +36,8 @@ const part1 = (rawInput) => {
   }
 
   let sum = 0;
+
+  
   for (let num of nums) {
     const lineBefore = input[num.y - 1]?.substring(num.x - 1, num.x + num.num.length + 1) ?? "";
     const charBefore = input[num.y][num.x - 1] ?? "";
@@ -61,15 +63,14 @@ const part2 = (rawInput) => {
     for (let col = 0; col < line.length; col++) {
       if (line[col] == "*") {
         const neighbors = [];
-        const lines = input.slice(row - 1, row + 2);
 
-        for (let line of lines) {
+        const condensedLines = input.slice(row - 1, row + 2).map((line) => line.slice(col - 3, col + 4));
+        for (let line of condensedLines) {
           const matches = line?.matchAll(/\d+/g) ?? [];
           for (const match of matches) {
-            if (match.index < col && (match.index + match[0].length) >= (col)) {
+            if (match.index - 3 < 0 && (match.index + match[0].length - 3) >= 0) {
               neighbors.push(match[0]);
-            } else
-              if ((match.index + match[0].length) > col && match.index <= (col + 1)) {
+            } else if (match.index + match[0].length - 3 > 0 && match.index - 3 <= 1) {
                 neighbors.push(match[0]);
               }
           }
