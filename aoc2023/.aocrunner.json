@@ -83,7 +83,7 @@
           "33184373",
           "33184372"
         ],
-        "time": 6.4892
+        "time": 5830652.92
       }
     },
     {
@@ -104,16 +104,23 @@
     },
     {
       "part1": {
-        "solved": false,
-        "result": null,
-        "attempts": [],
-        "time": null
+        "solved": true,
+        "result": "248105065",
+        "attempts": [
+          "247517048",
+          "245892782"
+        ],
+        "time": 2.3076
       },
       "part2": {
-        "solved": false,
-        "result": null,
-        "attempts": [],
-        "time": null
+        "solved": true,
+        "result": "249515436",
+        "attempts": [
+          "249794693",
+          "249206147",
+          "249388666"
+        ],
+        "time": 48.2053
       }
     },
     {

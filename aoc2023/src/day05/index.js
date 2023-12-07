@@ -1,5 +1,12 @@
 import run from "aocrunner";
 
+import {
+    Worker,
+    isMainThread
+} from "worker_threads";
+
+const __dirname = new URL('.', import.meta.url).pathname;
+
 const parseInput = (rawInput) => rawInput.split("\n");
 
 const extractSourceAndDestinationInfo = (acc, curr) => {
@@ -48,11 +55,45 @@ const part1 = (rawInput) => {
     return Math.min(...locations)
 };
 
-const part2 = (rawInput) => {
+const part2 = async (rawInput) => {
     const input = parseInput(rawInput);
-    const [seedsInfo, ...rest] = input;
+    const [seedsLine, ...rest] = input;
+    const seedsInfo = findNumbersInString(seedsLine).reduce((acc, curr, i) => {
+        if (i % 2 === 0) {
+            acc.push([curr])
+        } else {
+            acc[acc.length - 1].push(curr)
+        }
+        return acc;
+    }, []);
 
-    return 0;
+    const minLocation = await new Promise((resolve, reject) => {
+        const threads = new Set();
+        const locations = [];
+        for (const [i, workerData] of seedsInfo.entries()) {
+            const worker = new Worker('./src/day05/worker.js', {
+                workerData
+            });
+            threads.add(worker);
+            worker.on('message', (msg) => {
+                if (msg.min) {
+                    locations.push(msg.min);
+                    console.log(`Worker ${i} has found a location ${msg.min}`)
+                } else if (msg.i) {
+                    console.log(`Worker ${i} has processed ${msg.i} seeds`)
+                }
+            });
+            worker.on('error', console.error);
+            worker.on('exit', (code) => {
+                threads.delete(worker);
+                if (threads.size === 0) {
+                    resolve(Math.min(...locations));
+            }
+            });
+        }
+    });
+
+    return minLocation;
 };
 
 
