@@ -13,7 +13,7 @@ const part1 = (rawInput) => {
         for (const card of hand) {
             counts[order.indexOf(card)]++;
         }
-        const card_counts = counts.sort((a,b) => b-a).slice(0, 4).join("");
+        const card_counts = counts.sort((a,b) => b-a).slice(0, 2).join("");
         return {hand, card_counts, bid};
     });
 
@@ -46,13 +46,15 @@ const part2 = (rawInput) => {
             counts[order.indexOf(card)]++;
         }
         const jokerCount = counts.pop();
-        const relevantCounts = counts.sort((a,b) => b-a).slice(0, 4);
+        const relevantCounts = counts.sort((a,b) => b-a).slice(0, 2);
         relevantCounts[0] += jokerCount;
 
         const card_counts = relevantCounts.join("");
 
         return {hand, card_counts, bid};
     });
+
+    console.log(parsed)
 
     const sorted = parsed.sort((a, b) => {
         if (a.card_counts !== b.card_counts) {
@@ -104,5 +106,5 @@ run({
         solution: part2,
     },
     trimTestInputs: true,
-    onlyTests: false,
+    onlyTests: true,
 });

@@ -40,6 +40,22 @@ const getStrength = (hand) => {
     }
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const adjustStrength = (counts) => {
     const strengthWithoutJokers = getStrength(counts.slice(0, counts.length - 1));
     const jokerCount = counts[counts.length - 1];
