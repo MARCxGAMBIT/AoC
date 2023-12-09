@@ -39,10 +39,7 @@ const part2 = (rawInput) => {
         return acc;
     }, {});
 
-    const max = instructions.length;
-
     const startingNodes = Object.keys(map).filter((key) => key.endsWith("A"));
-    console.log(startingNodes);
 
     const distances = startingNodes.map((node) => {
         let i = 0;
@@ -53,7 +50,7 @@ const part2 = (rawInput) => {
             const instruction = instructions[i++ % max];
             currentNode = map[currentNode][instruction === "R" ? 1 : 0];
             if (currentNode.endsWith("Z")) {
-                return i;
+                return i; 
             }
         }
     });

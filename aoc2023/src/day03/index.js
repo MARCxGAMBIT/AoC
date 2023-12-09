@@ -83,7 +83,7 @@ const part2 = (rawInput) => {
     }
 
     // this makes the code go faster?!
-    for (let _ of []) { }
+    // for (let _ of []) { }
 
     return sum;
 };
