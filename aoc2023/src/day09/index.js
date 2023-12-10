@@ -2,31 +2,27 @@ import run from "aocrunner";
 
 const parseInput = (rawInput) => rawInput.split("\n").map((line) => line.trim());
 
-const diffNums = (nums) => {
-    const diffs = [];
-    for (let i = 0; i < nums.length - 1; i++) {
-        diffs.push(nums[i + 1] - nums[i]);
-    }
-    return diffs;
-};
+const diffNums = (nums) => nums.slice(1).map((n, i) => n - nums[i]);
+
+const sum = (acc, cur) => acc + cur;
+
+const extractNums = line => line.match(/-?\d+/g).map(Number);
 
 const recCalcNext = (nums) => {
     if (nums.every(n => n === 0)) {
         return 0;
     }
-    return recCalcNext(diffNums(nums)) + nums.pop();
+    return recCalcNext(diffNums(nums)) + nums.at(-1);
 }
 
 const recCalcPrev = (nums) => {
     if (nums.every(n => n === 0)) {
         return 0;
     }
-    return -recCalcPrev(diffNums(nums)) + nums.shift();
+    return -recCalcPrev(diffNums(nums)) + nums[0];
 }
 
-const sum = (acc, cur) => acc + cur;
 
-const extractNums = line => line.match(/-?\d+/g).map(Number);
 
 const part1 = (rawInput) => {
     const input = parseInput(rawInput);
