@@ -166,15 +166,15 @@
         "attempts": [
           "44"
         ],
-        "time": 8.6017
+        "time": 8.8678
       }
     },
     {
       "part1": {
-        "solved": false,
-        "result": null,
+        "solved": true,
+        "result": "10154062",
         "attempts": [],
-        "time": null
+        "time": 12.3594
       },
       "part2": {
         "solved": false,
