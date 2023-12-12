@@ -10,7 +10,7 @@ const m = {
     "F": "┏",
     "7": "┓",
     "S": "╋",
-    ".": "•"
+    ".": "."
 }
 
 const printInput = (input) => input.map(line => line.replaceAll(/./g, (x) => m[x])).join("\n");
@@ -75,7 +75,7 @@ const part1 = (rawInput) => {
         steps++;
     }
 
-    return steps / 2;
+    return steps >> 1;
 };
 
 const part2 = (rawInput) => {
@@ -103,6 +103,7 @@ const part2 = (rawInput) => {
         .filter(line => line.length > 0)
         .flatMap(line => line.map(match => match[1].length))
         .reduce((acc, cur) => acc + cur, 0);
+
 };
 
 run(
