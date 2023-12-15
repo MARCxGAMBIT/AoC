@@ -1,20 +1,11 @@
 import run from "aocrunner";
+import { parseInput, sum } from "../utils/index.js";
 
-const parseInput = (rawInput) => rawInput.split("\n").map((line) => line.trim());
-
-const sum = (acc, curr) => acc + curr;
 const focusingPower = (acc, focalLength, i) => acc + Number(focalLength) * (i + 1);
 const totalFocusingPower = (acc, [boxnum, lenses]) => acc + (Number(boxnum) + 1) * Object.values(lenses).reduce(focusingPower, 0);
 
-const hash = (input) => {
-    let output = 0;
-    for (let c of input) {
-        output += c.charCodeAt(0);
-        output *= 17;
-        output %= 256;
-    }
-    return output;
-}
+const step = (accu, char) => (accu + char.charCodeAt(0)) * 17 % 256;
+const hash = (string) => [...string].reduce(step, 0);
 
 const part1 = (rawInput) => {
     const input = parseInput(rawInput)[0];

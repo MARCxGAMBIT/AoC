@@ -1,8 +1,5 @@
 import run from "aocrunner";
-
-const parseInput = (rawInput) => rawInput.split("\n").map((line) => line.trim());
-
-
+import { parseInput } from "../utils/index.js";
 
 // a function that rotates a matrix clockwise 90 degrees with a focus on performance
 const rotateClockwise = (matrix) => {

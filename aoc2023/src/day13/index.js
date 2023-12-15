@@ -1,10 +1,5 @@
 import run from "aocrunner";
-
-const parseInput = (rawInput) => rawInput.split("\n\n");
-
-const transpose = (matrix) => matrix[0].map((_, colIndex) => matrix.map((row) => row[colIndex]));
-
-const sum = (a, b) => a + b;
+import { transpose, parseGroupedInput } from "../utils/index.js";
 
 const diffBetweenRows = (a, b) => {
     let diffsAt = [];
@@ -77,11 +72,11 @@ const findReflection2 = (matrix, oldReflection) => {
 }
 
 const part1 = (rawInput) => {
-    const input = parseInput(rawInput);
+    const input = parseGroupedInput(rawInput);
 
     let sum = 0;
-    for (const pattern of input) {
-        const matrix = pattern.split("\n").map(line => line.split(""));
+    for (const group of input) {
+        const matrix = group.map(line => line.split(""));
         const transposed = transpose(matrix);
 
         sum += 100 * findReflection(matrix) + findReflection(transposed);
@@ -91,11 +86,11 @@ const part1 = (rawInput) => {
 };
 
 const part2 = (rawInput) => {
-    const input = parseInput(rawInput);
-
+    const input = parseGroupedInput(rawInput);
+    
     let sum = 0;
-    for (const pattern of input) {
-        const matrix = pattern.split("\n").map(line => line.split(""));
+    for (const group of input) {
+        const matrix = group.map(line => line.split(""));
         const origReflectionAt = findReflection(matrix);
         const reflectionAt = findReflection2(matrix, origReflectionAt);
 
