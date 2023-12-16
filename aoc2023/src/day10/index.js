@@ -1,6 +1,6 @@
 import run from "aocrunner";
 
-const parseInput = (rawInput) => rawInput.split("\n").map((line) => line.trim());
+const parseInput = (rawInput) => rawInput.split("\n").map((line) => line.trim().split(""));
 
 const m = {
     "|": "┃",
@@ -13,7 +13,7 @@ const m = {
     ".": "."
 }
 
-const printInput = (input) => input.map(line => line.replaceAll(/./g, (x) => m[x])).join("\n");
+const printInput = (input) => input.map(line => line.join("").replaceAll(/./g, (x) => m[x])).join("\n");
 
 const dirMap = {
     "E": [0, 1],
@@ -22,15 +22,55 @@ const dirMap = {
     "S": [1, 0],
 }
 
-const neighborMap = {
+const neighborMapGeneric = {
     "|": ["N", "S"],
     "-": ["E", "W"],
     "L": ["N", "E"],
     "J": ["N", "W"],
     "F": ["S", "E"],
     "7": ["S", "W"],
-    "S": ["E", "W", "N", "S"],
     ".": [],
+}
+
+const getStartConfig = (input) => {
+    const startRow = input.findIndex(line => line.includes("S"));
+    const startCol = input[startRow].indexOf("S");
+
+    const isTopConnected = ["F", "7", "|"].includes(input[startRow - 1]?.[startCol]);
+    const isLeftConnected = ["L", "F", "-"].includes(input[startRow]?.[startCol - 1]);
+    const isBottomConnected = ["J", "L", "|"].includes(input[startRow + 1]?.[startCol]);
+    const isRightConnected = ["J", "7", "-"].includes(input[startRow]?.[startCol + 1]);
+
+    let dirs = null;
+    let symbol = null;
+    if (isTopConnected) {
+        if (isLeftConnected) {
+            dirs = ["N", "W"];
+            symbol = "L";
+        }
+        if (isRightConnected) {
+            dirs = ["N", "E"];
+            symbol = "J";
+        }
+        if (isBottomConnected) {
+            dirs = ["N", "S"];
+            symbol = "|";
+        }
+    } else if (isBottomConnected) {
+        if (isLeftConnected) {
+            dirs = ["S", "W"];
+            symbol = "7";
+        }
+        if (isRightConnected) {
+            dirs = ["S", "E"];
+            symbol = "F";
+        }
+    } else {
+        dirs = ["E", "W"];
+        symbol = "-";
+    }
+
+    return { dirs, symbol, startRow, startCol };
 }
 
 const conv = {
@@ -41,7 +81,7 @@ const conv = {
 
 const convPipe = (input) => conv[input] ?? input;
 
-const getUnvisitedNeighbors = (input, row, col, visited) => {
+const getUnvisitedNeighbors = (input, row, col, visited, neighborMap) => {
     const neighbors = [];
     for (const dir of neighborMap[input[row][col]]) {
         const [dRow, dCol] = dirMap[dir];
@@ -56,22 +96,23 @@ const getUnvisitedNeighbors = (input, row, col, visited) => {
 
 const part1 = (rawInput) => {
     const input = parseInput(rawInput);
-    console.log(printInput(input));
 
-    const startRow = input.findIndex(line => line.includes("S"));
-    const startCol = input[startRow].indexOf("S");
+    const { startRow, startCol, dirs } = getStartConfig(input);
+    const neighborMap = {
+        ...neighborMapGeneric,
+        "S": dirs
+    }
 
-    // create a 2d array the same size as input but filled with 0s
     const visited = Array.from({ length: input.length }, () => Array.from({ length: input[0].length }, () => 0));
 
     visited[startRow][startCol] = 1;
 
-    let [neighbor] = getUnvisitedNeighbors(input, startRow, startCol, visited);
+    let [neighbor] = getUnvisitedNeighbors(input, startRow, startCol, visited, neighborMap);
     let steps = 1;
     while (neighbor) {
         const [row, col] = neighbor;
         visited[row][col] = 1;
-        [neighbor] = getUnvisitedNeighbors(input, row, col, visited)
+        [neighbor] = getUnvisitedNeighbors(input, row, col, visited, neighborMap)
         steps++;
     }
 
@@ -81,19 +122,21 @@ const part1 = (rawInput) => {
 const part2 = (rawInput) => {
     const input = parseInput(rawInput);
 
-    // code assumes that you manually modify the S to be the correct pipe
-    // const startRow = 0;
-    const startRow = 50;
-    // const startCol = 4;
-    const startCol = 39;
+    const { startRow, startCol, dirs, symbol } = getStartConfig(input);
+    const neighborMap = {
+        ...neighborMapGeneric,
+        "S": dirs
+    }
 
+    
     const visited = Array.from({ length: input.length }, () => Array.from({ length: input[0].length }, () => 0));
-
-    let [neighbor] = getUnvisitedNeighbors(input, startRow, startCol, visited);
+    visited[startRow][startCol] = convPipe(symbol);
+    
+    let [neighbor] = getUnvisitedNeighbors(input, startRow, startCol, visited, neighborMap);
     while (neighbor) {
         const [row, col] = neighbor;
         visited[row][col] = convPipe(input[row][col]);
-        [neighbor] = getUnvisitedNeighbors(input, row, col, visited)
+        [neighbor] = getUnvisitedNeighbors(input, row, col, visited, neighborMap)
     }
 
     return visited
@@ -108,58 +151,70 @@ const part2 = (rawInput) => {
 
 run(
     {
-    // part1: {
-    //     tests: [
-    //         {
-    //             input: `.....
-    //             .S-7.
-    //             .|.|.
-    //             .L-J.
-    //             .....`,
-    //             expected: 4,
-    //         },
-    //         {
-    //             input: `..F7.
-    //             .FJ|.
-    //             SJ.L7
-    //             |F--J
-    //             LJ...`,
-    //             expected: 8,
-    //         },
-    //     ],
-    //     solution: part1,
-    // },
-    part2: {
-        tests: [
-            // {
-            //     input: `.F----7F7F7F7F-7....
-            //     .|F--7||||||||FJ....
-            //     .||.FJ||||||||L7....
-            //     FJL7L7LJLJ||LJ.L-7..
-            //     L--J.L7...LJS7F-7L7.
-            //     ....F-J..F7FJ|L7L7L7
-            //     ....L7.F7||L7|.L7L7|
-            //     .....|FJLJ|FJ|F7|.LJ
-            //     ....FJL-7.||.||||...
-            //     ....L---J.LJ.LJLJ...`,
-            //     expected: 8,
-            // },
-            // {
-            //     input: `FF7FSF7F7F7F7F7F---7
-            //     L|LJ||||||||||||F--J
-            //     FL-7LJLJ||||||LJL-77
-            //     F--JF--7||LJLJ7F7FJ-
-            //     L---JF-JLJ.||-FJLJJ7
-            //     |F|F-JF---7F7-L7L|7|
-            //     |FFJF7L7F-JF7|JL---7
-            //     7-L-JL7||F7|L7F-7F7|
-            //     L.L7LFJ|||||FJL7||LJ
-            //     L7JLJL-JLJLJL--JLJ.L`,
-            //     expected: 10,
-            // },
-        ],
-        solution: part2,
-    },
-    trimTestInputs: true,
-    onlyTests: false,
-});
+        part1: {
+            tests: [
+                {
+                    input: `.....
+                .S-7.
+                .|.|.
+                .L-J.
+                .....`,
+                    expected: 4,
+                },
+                {
+                    input: `..F7.
+                .FJ|.
+                SJ.L7
+                |F--J
+                LJ...`,
+                    expected: 8,
+                },
+            ],
+            solution: part1,
+        },
+        part2: {
+            tests: [
+                {
+                    input: `...........
+                    .S-------7.
+                    .|F-----7|.
+                    .||.....||.
+                    .||.....||.
+                    .|L-7.F-J|.
+                    .|..|.|..|.
+                    .L--J.L--J.
+                    ...........`,
+                    expected: 4,
+                },
+                {
+                    input: `.F----7F7F7F7F-7....
+                    .|F--7||||||||FJ....
+                    .||.FJ||||||||L7....
+                    FJL7L7LJLJ||LJ.L-7..
+                    L--J.L7...LJS7F-7L7.
+                    ....F-J..F7FJ|L7L7L7
+                    ....L7.F7||L7|.L7L7|
+                    .....|FJLJ|FJ|F7|.LJ
+                    ....FJL-7.||.||||...
+                    ....L---J.LJ.LJLJ...`,
+                    expected: 8,
+                },
+                {
+                    input: `FF7FSF7F7F7F7F7F---7
+                    L|LJ||||||||||||F--J
+                    FL-7LJLJ||||||LJL-77
+                    F--JF--7||LJLJ7F7FJ-
+                    L---JF-JLJ.||-FJLJJ7
+                    |F|F-JF---7F7-L7L|7|
+                    |FFJF7L7F-JF7|JL---7
+                    7-L-JL7||F7|L7F-7F7|
+                    L.L7LFJ|||||FJL7||LJ
+                    L7JLJL-JLJLJL--JLJ.L`,
+                    expected: 10,
+                },
+            ],
+            solution: part2,
+        },
+        trimTestInputs: true,
+        onlyTests: false,
+    });
