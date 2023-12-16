@@ -64,16 +64,23 @@ const part2 = (rawInput) => {
             tilt(matrix);
             rotateClockwise(matrix);
         }
-        const weight = calcWeight(matrix);
         const key = matrix.toString();
+
         if (weights.has(key)) {
-            const { i: index } = weights.get(key);
+            const index = weights.get(key);
             const cycle = i - index;
             const relevantIndex = (1000000000 - index) % cycle + index - 1;
             const weightList = Array.from(weights);
-            return weightList[relevantIndex][1].weight;
+            const relevantCells = weightList[relevantIndex][0];
+            const rows = matrix.length;
+            // reconstruct original matrix from comma separated string
+            const relevantMatrix = relevantCells
+                .split(",")
+                .reduce((acc, curr, i) => { acc[Math.floor(i / rows)].push(curr); return acc; }, Array.from({ length: rows }, () => []));
+
+            return calcWeight(relevantMatrix);
         }
-        weights.set(key, { weight, i });
+        weights.set(key, i);
     }
 };
 
