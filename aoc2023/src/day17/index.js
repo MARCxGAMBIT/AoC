@@ -23,7 +23,7 @@ class PriorityQueue {
 
 const dirs = [[0, 1], [1, 0], [0, -1], [-1, 0]];
 
-const isPosValid = ([row, col], input) => row >= 0 && row < input.length && col >= 0 && col < input[0].length;
+const isCoordValid = ([row, col], input) => row >= 0 && row < input.length && col >= 0 && col < input[0].length;
 
 const findMinimalHeatloss = (input, minSteps, maxSteps) => {
     const queue = new PriorityQueue();
@@ -36,6 +36,7 @@ const findMinimalHeatloss = (input, minSteps, maxSteps) => {
 
     while (!queue.isEmpty()) {
         const { item, direction } = queue.shift();
+        const currentKey = [...item, direction];
 
         if (item.toString() === goal.toString()) {
             break;
@@ -49,20 +50,21 @@ const findMinimalHeatloss = (input, minSteps, maxSteps) => {
             let costIncrease = 0;
 
             for (let distance = 1; distance <= maxSteps; distance++) {
-                const newRow = item[0] + dirs[dir][0] * distance;
-                const newCol = item[1] + dirs[dir][1] * distance;
-                const next = [newRow, newCol];
+                const nextRow = item[0] + dirs[dir][0] * distance;
+                const nextCol = item[1] + dirs[dir][1] * distance;
+                const nextCoord = [nextRow, nextCol];
 
-                if (isPosValid(next, input)) {
-                    costIncrease += input[newRow][newCol];
+                if (isCoordValid(nextCoord, input)) {
+                    costIncrease += input[nextRow][nextCol];
 
                     if (distance < minSteps) {
                         continue;
                     }
-                    const new_cost = costs[[...item, direction]] + costIncrease;
-                    if (!([...next, dir] in costs) || new_cost < costs[[...next, dir]]) {
-                        costs[[...next, dir]] = new_cost;
-                        queue.push(next, new_cost, dir);
+                    const next_cost = costs[currentKey] + costIncrease;
+                    const next_key = [...nextCoord, dir];
+                    if (!(next_key in costs) || next_cost < costs[next_key]) {
+                        costs[next_key] = next_cost;
+                        queue.push(nextCoord, next_cost, dir);
                     }
                 }
             }
