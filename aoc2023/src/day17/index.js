@@ -2,13 +2,31 @@ import run from "aocrunner";
 
 const parseInput = (rawInput) => rawInput.split("\n").map((line) => line.trim().split("").map(Number));
 
+class PriorityQueue {
+    constructor() {
+        this.elements = [];
+    }
+
+    push(item, priority) {
+        this.elements.push({ item, priority });
+        this.elements.sort((a, b) => a.priority - b.priority);
+    }
+
+    shift() {
+        return this.elements.shift().item;
+    }
+
+    isEmpty() {
+        return this.elements.length === 0;
+    }
+}
+
+const dirs = [[0, 1], [1, 0], [0, -1], [-1, 0]];
+
 const getNeighbors = (current, input, came_from) => {
     const [row, col] = current;
+    const previous = came_from[current];
     const neighbors = [];
-    const prev = came_from[current];
-    // const prev2 = came_from[prev1];
-    // const prev3 = came_from[prev2];
-    // const validPredecessor = [prev1, prev2, prev3].filter(Boolean);
 
     if (row > 0) {
         neighbors.push([row - 1, col]);
@@ -23,40 +41,64 @@ const getNeighbors = (current, input, came_from) => {
         neighbors.push([row, col + 1]);
     }
 
-    return neighbors.filter(([row, col]) => row !== prev?.[0] && col !== prev?.[1]);
+    return neighbors.filter(ele => ele.toString() !== previous?.toString());
 };
 
 const part1 = (rawInput) => {
     const input = parseInput(rawInput);
 
-    const queue = [];
+    const queue = new PriorityQueue();
+
     const start = [0, 0];
     const goal = [input.length - 1, input[0].length - 1];
 
-    queue.push(start);
+    queue.push(start, 0);
     const came_from = { [start]: null };
+    const costs = { [start]: input[start[0]][start[1]] };
 
-    while (queue.length > 0) {
+    while (!queue.isEmpty()) {
         const current = queue.shift();
 
-        if (current.toString() === goal) {
-            break;
-        }
+        // if (current.toString() === goal.toString()) {
+        //     break;
+        // }
 
         const neighbors = getNeighbors(current, input, came_from);
-        for (const neighbor of neighbors) {
-            if (!(neighbor in came_from)) {
-                queue.push(neighbor);
-                came_from[neighbor] = current;
+        for (const next of neighbors) {
+            const new_cost = costs[current] + input[next[0]][next[1]];
+            if (!(next in costs) || new_cost < costs[next]) {
+                came_from[next] = current;
+                costs[next] = new_cost;
+                queue.push(next, new_cost);
             }
         }
     }
 
+    let current = goal;
+    const path = [];
+    while (current && current.toString() !== start.toString()) {
+        path.push(current);
+        current = came_from[current];
+    }
+    path.push(start);
+    path.reverse();
+    const p = path.map(x => x.toString())
 
-    console.log(came_from);
+    // create array the same size as input filled with 0
+    const output = Array.from({ length: input.length }, () => Array.from({ length: input[0].length }, () => 0));
+    Object.entries(costs).forEach(([key, value]) => {
+        const [row, col] = key.split(",").map(Number);
+        output[row][col] = value;
+        if (p.includes(key)) {
+            output[row][col] += "!";
+        }
+    });
+
+    console.table(output);
 
 
-    return;
+
+    return costs[goal];
 };
 
 const part2 = (rawInput) => {
