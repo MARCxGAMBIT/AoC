@@ -81,17 +81,16 @@ const conv = {
 
 const convPipe = (input) => conv[input] ?? input;
 
-const getUnvisitedNeighbors = (input, row, col, visited, neighborMap) => {
-    const neighbors = [];
+const getUnvisitedNeighbor = (input, row, col, visited, neighborMap) => {
     for (const dir of neighborMap[input[row][col]]) {
         const [dRow, dCol] = dirMap[dir];
         const newRow = row + dRow;
         const newCol = col + dCol;
         if (newRow >= 0 && newRow < input.length && newCol >= 0 && newCol < input[0].length && input[newRow][newCol] !== "." && !visited[newRow][newCol]) {
-            neighbors.push([newRow, newCol]);
+            return [newRow, newCol];
         }
     }
-    return neighbors;
+    return null;
 }
 
 const part1 = (rawInput) => {
@@ -107,12 +106,12 @@ const part1 = (rawInput) => {
 
     visited[startRow][startCol] = 1;
 
-    let [neighbor] = getUnvisitedNeighbors(input, startRow, startCol, visited, neighborMap);
+    let neighbor = getUnvisitedNeighbor(input, startRow, startCol, visited, neighborMap);
     let steps = 1;
     while (neighbor) {
         const [row, col] = neighbor;
         visited[row][col] = 1;
-        [neighbor] = getUnvisitedNeighbors(input, row, col, visited, neighborMap)
+        neighbor = getUnvisitedNeighbor(input, row, col, visited, neighborMap)
         steps++;
     }
 
@@ -132,11 +131,11 @@ const part2 = (rawInput) => {
     const visited = Array.from({ length: input.length }, () => Array.from({ length: input[0].length }, () => 0));
     visited[startRow][startCol] = convPipe(symbol);
     
-    let [neighbor] = getUnvisitedNeighbors(input, startRow, startCol, visited, neighborMap);
+    let neighbor = getUnvisitedNeighbor(input, startRow, startCol, visited, neighborMap);
     while (neighbor) {
         const [row, col] = neighbor;
         visited[row][col] = convPipe(input[row][col]);
-        [neighbor] = getUnvisitedNeighbors(input, row, col, visited, neighborMap)
+        neighbor = getUnvisitedNeighbor(input, row, col, visited, neighborMap)
     }
 
     return visited
