@@ -1,8 +1,14 @@
 import run from "aocrunner";
+import { parseInput } from "../utils/index.js";
 
-const parseInput = (rawInput) => rawInput.split("\n").map((line) => line.trim());
+const dirMap = {
+    R: [0, 1],
+    D: [1, 0],
+    L: [0, -1],
+    U: [-1, 0],
+}
 
-function calculateArea(coords) {
+const calcInnerArea = (coords) => {
     let area = 0;
 
     for (let i = 0; i < coords.length; i++) {
@@ -15,52 +21,40 @@ function calculateArea(coords) {
     return Math.abs(area) / 2;
 }
 
-const directions = ["R", "D", "L", "U"];
-const dirs = [[0, 1], [1, 0], [0, -1], [-1, 0]];
+const calcTotalArea = (instructions) => {
+    const coords = [[0, 0]];
+    let perimeter = 0;
 
-const calcAreaFromInstructions = (instructions) => {
-    const coords = instructions.reduce((acc, [direction, distance], i) => {
-        const [nextDirection] = instructions.at((i + 1) % instructions.length);
-        const [prevDirection] = instructions.at(i - 1);
+    for (const [direction, distance] of instructions) {
+        perimeter += distance;
+        const [prevRow, prevCol] = coords.at(-1);
+        const newRow = prevRow + dirMap[direction][0] * distance;
+        const newCol = prevCol + dirMap[direction][1] * distance;
+        coords.push([newRow, newCol]);
+    }
 
-        let newDistance = distance;
-
-        const dirIdx = directions.indexOf(direction);
-        const a = directions.at(dirIdx - 1);
-        const b = directions.at((dirIdx + 1) % directions.length);
-
-        if (a === prevDirection && b === nextDirection) {
-            newDistance += 1;
-        } else if (a === nextDirection && b === prevDirection) {
-            newDistance -= 1;
-        }
-
-        const coordChangeIdx = dirs.at(dirIdx);
-        const [prevRow, prevCol] = acc.at(-1);
-        const newRow = prevRow + coordChangeIdx[0] * newDistance;
-        const newCol = prevCol + coordChangeIdx[1] * newDistance;
-        acc.push([newRow, newCol]);
-        return acc;
-    }, [[0, 0]]);
-
-    return calculateArea(coords);
+    return calcInnerArea(coords) + (perimeter >> 1) + 1;
 }
 
 const part1 = (rawInput) => {
     const input = parseInput(rawInput);
+
     const instructions = input
         .map((line) => line.split(" "))
         .map((line) => [line[0], Number(line[1])]);
-    return calcAreaFromInstructions(instructions);
+
+    return calcTotalArea(instructions);
 };
 
 const part2 = (rawInput) => {
     const input = parseInput(rawInput);
-    const instructions = input
-    .map(line => line.split("#")[1].replace(")", ""))
-    .map(hex => [directions[hex.at(-1)], parseInt(hex.slice(0, -1), 16)]);
+    const directions = Object.keys(dirMap);
 
-    return calcAreaFromInstructions(instructions);
+    const instructions = input
+        .map((line) => line.split("#")[1])
+        .map((hex) => [directions[hex.at(-2)], parseInt(hex.slice(0, -2), 16)]);
+
+    return calcTotalArea(instructions);
 };
 
 run({
