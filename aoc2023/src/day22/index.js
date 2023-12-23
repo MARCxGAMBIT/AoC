@@ -26,6 +26,14 @@ const simulateFall = (snapshot) => {
     }
 }
 
+const countDiff = (a, b) => {
+    let counter = 0;
+    for (let i = 0; i < a.length; i++) {
+        (a[i] !== b[i]) && counter++;
+    }
+    return counter;
+}
+
 const part1 = (rawInput) => {
     const input = parseInput(rawInput);
 
@@ -38,10 +46,10 @@ const part1 = (rawInput) => {
     let counter = 0;
     for (let i = 0; i < snapshot.length; i++) {
         const copy = JSON.parse(JSON.stringify(snapshot.slice(0, i).concat(snapshot.slice(i + 1))));
-        const state = copy.toString();
+        const originalZ = copy.map(brick => brick[2]);
         simulateFall(copy);
-        const newState = copy.toString();
-        if (state === newState) {
+        const droppedZ = copy.map(brick => brick[2]);
+        if (countDiff(originalZ, droppedZ) === 0) {
             counter++;
         }
     }
@@ -52,7 +60,22 @@ const part1 = (rawInput) => {
 const part2 = (rawInput) => {
     const input = parseInput(rawInput);
 
-    return;
+    const snapshot = input
+        .map(line => line.split(/~|,/).map(Number))
+        .sort((a, b) => a[2] - b[2]);
+
+    simulateFall(snapshot);
+
+    let counter = 0;
+    for (let i = 0; i < snapshot.length; i++) {
+        const copy = JSON.parse(JSON.stringify(snapshot.slice(0, i).concat(snapshot.slice(i + 1))));
+        const originalZ = copy.map(brick => brick[2]);
+        simulateFall(copy);
+        const droppedZ = copy.map(brick => brick[2]);
+        counter += countDiff(originalZ, droppedZ)
+    }
+
+    return counter;
 };
 
 run({
@@ -74,8 +97,14 @@ run({
     part2: {
         tests: [
             {
-                input: ``,
-                expected: 0,
+                input: `1,0,1~1,2,1
+                0,0,2~2,0,2
+                0,2,3~2,2,3
+                0,0,4~0,2,4
+                2,0,5~2,2,5
+                0,1,6~2,1,6
+                1,1,8~1,1,9`,
+                expected: 7,
             },
         ],
         solution: part2,
