@@ -20,7 +20,8 @@
   },
   "dependencies": {
     "compute-lcm": "^1.1.2",
-    "numjs": "^0.16.1"
+    "numjs": "^0.16.1",
+    "z3-solver": "^4.12.4"
   },
   "engines": {
     "node": ">=16.13.0"

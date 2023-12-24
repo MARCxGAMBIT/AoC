@@ -1,6 +1,5 @@
 import run from "aocrunner";
-
-const parseInput = (rawInput) => rawInput.split("\n").map((line) => line.trim());
+import { parseInput } from "../utils/index.js";
 
 const simulateFall = (snapshot) => {
     const heights = Array.from({ length: 10 }, () => Array.from({ length: 10 }, () => 0));
