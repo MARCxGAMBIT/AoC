@@ -358,7 +358,7 @@
         "solved": true,
         "result": "2010",
         "attempts": [],
-        "time": 112.9031
+        "time": 116.3448
       },
       "part2": {
         "solved": true,
@@ -366,7 +366,7 @@
         "attempts": [
           "4826"
         ],
-        "time": 2755539.6033
+        "time": 19500.6348
       }
     },
     {
