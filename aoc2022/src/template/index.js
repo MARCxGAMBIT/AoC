@@ -1,6 +1,5 @@
 import run from "aocrunner";
-
-const parseInput = (rawInput) => rawInput.split("\n");
+import { parseInput, parseGroupedInput, parseMatrix } from "../utils/index.js";
 
 const part1 = (rawInput) => {
     const input = parseInput(rawInput);
@@ -34,5 +33,5 @@ run({
         solution: part2,
     },
     trimTestInputs: true,
-    onlyTests: false,
+    onlyTests: true,
 });
