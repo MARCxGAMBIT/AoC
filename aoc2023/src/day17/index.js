@@ -8,8 +8,8 @@ class PriorityQueue {
     }
 
     push(item, priority, direction) {
-        this.elements.push({ item, priority, direction });
-        this.elements.sort((a, b) => a.priority - b.priority);
+        const insertAt = this.elements.findIndex((e) => e.priority > priority);
+        this.elements.splice(insertAt, 0, { item, priority, direction });
     }
 
     shift() {
