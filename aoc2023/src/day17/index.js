@@ -1,4 +1,5 @@
 import run from "aocrunner";
+import { MinPriorityQueue } from "@datastructures-js/priority-queue";
 
 const parseInput = (rawInput) => rawInput.split("\n").map((line) => line.trim().split("").map(Number));
 
@@ -26,16 +27,17 @@ const dirs = [[0, 1], [1, 0], [0, -1], [-1, 0]];
 const isCoordValid = ([row, col], input) => row >= 0 && row < input.length && col >= 0 && col < input[0].length;
 
 const findMinimalHeatloss = (input, minSteps, maxSteps) => {
-    const queue = new PriorityQueue();
+    // const queue = new PriorityQueue();
+    const queue = new MinPriorityQueue({ priority: (e) => e.priority });
 
     const start = [0, 0];
     const goal = [input.length - 1, input[0].length - 1];
 
-    queue.push(start, 0, -5);
+    queue.enqueue({ item: start, direction: -5, priority: 0  });
     const costs = { [[...start, -5]]: 0 };
 
     while (!queue.isEmpty()) {
-        const { item, direction } = queue.shift();
+        const { element: { item, direction } } = queue.dequeue();
         const currentKey = [...item, direction];
 
         if (item.toString() === goal.toString()) {
@@ -60,11 +62,11 @@ const findMinimalHeatloss = (input, minSteps, maxSteps) => {
                     if (distance < minSteps) {
                         continue;
                     }
-                    const next_cost = costs[currentKey] + costIncrease;
+                    const priority = costs[currentKey] + costIncrease;
                     const next_key = [...nextCoord, dir];
-                    if (!(next_key in costs) || next_cost < costs[next_key]) {
-                        costs[next_key] = next_cost;
-                        queue.push(nextCoord, next_cost, dir);
+                    if (!(next_key in costs) || priority < costs[next_key]) {
+                        costs[next_key] = priority;
+                        queue.enqueue({ item: nextCoord, priority, direction: dir});
                     }
                 }
             }

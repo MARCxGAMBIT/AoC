@@ -19,6 +19,7 @@
     "prettier": "^2.8.0"
   },
   "dependencies": {
+    "@datastructures-js/priority-queue": "^4.2.0",
     "compute-lcm": "^1.1.2",
     "numjs": "^0.16.1",
     "z3-solver": "^4.12.4"

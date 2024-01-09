@@ -26,7 +26,7 @@ const parseGraph = (input) => {
         });
     }
 
-    return { nodes, edges };
+    return { nodes, edges } 
 }
 
 const part1 = (rawInput) => {
