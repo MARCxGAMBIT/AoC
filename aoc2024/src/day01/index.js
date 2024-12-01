@@ -1,6 +1,9 @@
 import run from "aocrunner";
 import { parseTable, ascending, sum } from "../utils/index.js";
 
+/**
+ * Helper Class
+ */
 class Solver {
   constructor(rawInput) {
     this.rawInput = rawInput;
@@ -48,25 +51,33 @@ class Solver {
 
 }
 
-const part1 = (rawInput) => {
-  const solver = new Solver(rawInput);
-
-  return solver
+/**
+ * Calculate the solution of part 1
+ * 
+ * @param {string} rawInput 
+ * @returns {Number} solution to the problem
+ */
+const part1 = (rawInput) => new Solver(rawInput)
     .parseInput()
     .separateIdsIntoTwoLists()
     .sortListAscending()
     .calculateDistance();
-};
 
-const part2 = (rawInput) => {
-  const solver = new Solver(rawInput);
-
-  return solver
+/**
+ * Calculate the solution of part 2
+ * 
+ * @param {string} rawInput 
+ * @returns {Number} solution to the problem
+ */
+const part2 = (rawInput) => new Solver(rawInput)
     .parseInput()
     .separateIdsIntoTwoLists()
     .calculateOccurences();
-};
 
+
+/**
+ * AoC Runner
+ */
 run({
   part1: {
     tests: [
