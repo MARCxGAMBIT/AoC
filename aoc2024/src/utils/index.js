@@ -27,6 +27,10 @@ export function parseInput(rawInput) {
     return rawInput.split("\n").map((line) => line.trim());
 }
 
+export function parseTable(rawInput) {
+    return rawInput.split("\n").map(line => line.trim().split(/\s+/));
+}
+
 export function parseMatrix(rawInput) {
     return rawInput.split("\n").map((line) => line.trim().split(""));
 }
@@ -37,4 +41,20 @@ export function parseGroupedInput(rawInput) {
 
 export function transpose(matrix) {
     return matrix[0].map((_, colIndex) => matrix.map((row) => row[colIndex]));
+}
+
+export function ascending(a, b) {
+    return a - b;
+}
+
+export function descending(a, b) {
+    return b - a;
+}
+
+export function sum(a, b) {
+    return a + b;
+}
+
+export function prod(a, b) {
+    return a * b;
 }
