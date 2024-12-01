@@ -46,7 +46,7 @@ class Solver {
 
     return first
       .map(a => a * (occ[a] ?? 0))
-      .reduce(sum)
+      .reduce(sum);
   }
 
 }
