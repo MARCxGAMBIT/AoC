@@ -1,15 +1,22 @@
 import run from "aocrunner";
-import { parseInput, parseGroupedInput, parseMatrix, parseTable, ascending, sum } from "../utils/index.js";
+import { parseTable } from "../utils/index.js";
 
 class Solver {
 
   isPos = (num) => num > 0 & num < 4;
   isNeg = (num) => num < 0 & num > -4;
+
   isIncreasing = (nums) => nums.every(this.isPos);
   isDecreasing = (nums) => nums.every(this.isNeg);
-  calcDiff = (nums) => nums.map((curr, i) => curr - nums[i + 1]).slice(0, -1);
-  isSafe = (nums) => this.isIncreasing(this.calcDiff(nums)) || this.isDecreasing(this.calcDiff(nums));
+
+  calcDiff = (nums) => nums
+    .map((curr, i) => curr - nums[i + 1])
+    .slice(0, -1);
+
+  isSafe = (nums) => this.applyChecks(this.calcDiff(nums));
   isNotSafe = (nums) => !this.isSafe(nums);
+  applyChecks = (diffs) => this.isIncreasing(diffs) || this.isDecreasing(diffs);
+  // applyChecks = (diffs) => [this.isIncreasing, this.isDecreasing].some(fn => fn(diffs));
 
   constructor(rawInput) {
     this.rawInput = rawInput;
