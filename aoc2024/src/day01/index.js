@@ -17,7 +17,7 @@ class Solver {
   separateIdsIntoTwoLists() {
     this.twoLists = this.table
       .reduce(
-        ([listA, listB], [eleA, eleB]) => [[...listA, eleA], [...listB, eleB]],
+        ([listA, listB], [eleA, eleB]) => (listA.push(eleA), listB.push(eleB), [listA, listB]),
         [[], []]
       );
     return this;
@@ -108,5 +108,5 @@ run({
     solution: part2,
   },
   trimTestInputs: true,
-  onlyTests: false,
+  onlyTests: false
 });
