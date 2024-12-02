@@ -1,5 +1,5 @@
 import run from "aocrunner";
-import { parseTable, ascending, sum } from "../utils/index.js";
+import { parseTable, sum } from "../utils/index.js";
 
 /**
  * Helper Class
@@ -15,16 +15,16 @@ class Solver {
   }
 
   separateIdsIntoTwoLists() {
-    this.twoLists = this.table.reduce((acc, [a, b]) => {
-      acc[0].push(a);
-      acc[1].push(b);
-      return acc;
-    }, [[], []]);
+    this.twoLists = this.table
+      .reduce(
+        ([listA, listB], [eleA, eleB]) => [[...listA, eleA], [...listB, eleB]],
+        [[], []]
+      );
     return this;
   }
 
   sortListAscending() {
-    this.sortedLists = this.twoLists.map(list => list.sort(ascending));
+    this.sortedLists = this.twoLists.map(list => list.sort());
     return this;
   }
 
@@ -58,10 +58,10 @@ class Solver {
  * @returns {Number} solution to the problem
  */
 const part1 = (rawInput) => new Solver(rawInput)
-    .parseInput()
-    .separateIdsIntoTwoLists()
-    .sortListAscending()
-    .calculateDistance();
+  .parseInput()
+  .separateIdsIntoTwoLists()
+  .sortListAscending()
+  .calculateDistance();
 
 /**
  * Calculate the solution of part 2
@@ -70,9 +70,9 @@ const part1 = (rawInput) => new Solver(rawInput)
  * @returns {Number} solution to the problem
  */
 const part2 = (rawInput) => new Solver(rawInput)
-    .parseInput()
-    .separateIdsIntoTwoLists()
-    .calculateOccurences();
+  .parseInput()
+  .separateIdsIntoTwoLists()
+  .calculateOccurences();
 
 
 /**
