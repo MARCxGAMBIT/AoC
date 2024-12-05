@@ -15,7 +15,7 @@ const filterBrokenWith = (dict) =>
 const doesRuleApply = (messageNums, i) => (ruleNum) => messageNums.indexOf(ruleNum) > i || messageNums.indexOf(ruleNum) === -1;
 const doesRuleNotApply = (messageNums, i) => (ruleNum) => messageNums.indexOf(ruleNum) < i && messageNums.indexOf(ruleNum) !== -1;
 const sortWithDict = (dict) => (a, b) => dict[a]?.includes(b) ? -1 : (dict[b]?.includes(a) ? 1 : 0);
-const fixWithDict = (dict) => messageNums => messageNums.sort(sortWithDict(dict))
+const fixWith = (dict) => messageNums => messageNums.sort(sortWithDict(dict))
 const pickMiddleElement = messageNums => messageNums[~~(messageNums.length / 2)]
 
 /**
@@ -25,9 +25,7 @@ const pickMiddleElement = messageNums => messageNums[~~(messageNums.length / 2)]
  * @returns {Number} solution to the problem
  */
 const part1 = (rawInput) => {
-  const input = parseGroupedInput(rawInput);
-
-  const [rules, messages] = input;
+  const [rules, messages] = parseGroupedInput(rawInput);
 
   const dict = rules
     .map(splitAt("|"))
@@ -47,9 +45,7 @@ const part1 = (rawInput) => {
  * @returns {Number} solution to the problem
  */
 const part2 = (rawInput) => {
-  const input = parseGroupedInput(rawInput);
-
-  const [rules, messages] = input;
+  const [rules, messages] = parseGroupedInput(rawInput);
 
   const dict = rules
     .map(splitAt("|"))
@@ -57,7 +53,7 @@ const part2 = (rawInput) => {
 
   return messages.map(splitAt(","))
     .filter(filterBrokenWith(dict))
-    .map(fixWithDict(dict))
+    .map(fixWith(dict))
     .map(pickMiddleElement)
     .map(Number)
     .reduce(sum)
