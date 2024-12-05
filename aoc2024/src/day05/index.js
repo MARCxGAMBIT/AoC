@@ -1,8 +1,23 @@
 import run from "aocrunner";
-import { parseInput, parseGroupedInput, parseMatrix, parseTable, ascending, sum } from "../utils/index.js";
+import { parseGroupedInput, sum, splitAt } from "../utils/index.js";
 
-const doesRuleApply = (ruleNum) => messageNums.indexOf(ruleNum) > i || messageNums.indexOf(ruleNum) === -1;
-const doesRuleNotApply = (ruleNum) => messageNums.indexOf(ruleNum) < i && messageNums.indexOf(ruleNum) !== -1;
+const buildHashmap = (acc, [key, value]) => ((acc[key] ??= []).push(value), acc)
+const filterValidWith = (dict) =>
+  messageNums =>
+    messageNums
+      .every((num, i) => (dict[num] ?? []).every(doesRuleApply(messageNums, i)))
+
+const filterBrokenWith = (dict) =>
+  messageNums =>
+    messageNums
+      .some((num, i) => dict[num] ? dict[num].some(doesRuleNotApply(messageNums, i)) : false)
+
+const doesRuleApply = (messageNums, i) => (ruleNum) => messageNums.indexOf(ruleNum) > i || messageNums.indexOf(ruleNum) === -1;
+const doesRuleNotApply = (messageNums, i) => (ruleNum) => messageNums.indexOf(ruleNum) < i && messageNums.indexOf(ruleNum) !== -1;
+const sortWithDict = (dict) => (a, b) => dict[a]?.includes(b) ? -1 : (dict[b]?.includes(a) ? 1 : 0);
+const fixWithDict = (dict) => messageNums => messageNums.sort(sortWithDict(dict))
+const pickMiddleElement = messageNums => messageNums[~~(messageNums.length / 2)]
+
 /**
  * Calculate the solution of part 1
  * 
@@ -15,15 +30,12 @@ const part1 = (rawInput) => {
   const [rules, messages] = input;
 
   const dict = rules
-    .map(rule => rule.split("|"))
-    .reduce((acc, [key, value]) => ((acc[key] ??= []).push(value), acc), {});
+    .map(splitAt("|"))
+    .reduce(buildHashmap, {});
 
-  return messages.map(message => message.split(","))
-    .filter(messageNums => messageNums
-      .every((num, i) => (dict[num] ?? [])
-        .every((ruleNum) => messageNums.indexOf(ruleNum) > i || messageNums.indexOf(ruleNum) === -1)
-      ))
-    .map(messageNums => messageNums[Math.floor(messageNums.length / 2)])
+  return messages.map(splitAt(","))
+    .filter(filterValidWith(dict))
+    .map(pickMiddleElement)
     .map(Number)
     .reduce(sum)
 };
@@ -40,15 +52,13 @@ const part2 = (rawInput) => {
   const [rules, messages] = input;
 
   const dict = rules
-    .map(rule => rule.split("|"))
-    .reduce((acc, [key, value]) => ((acc[key] ??= []).push(value), acc), {});
+    .map(splitAt("|"))
+    .reduce(buildHashmap, {});
 
-  return messages.map(message => message.split(","))
-    .filter(messageNums => messageNums
-      .some((num, i) => dict[num] ? dict[num].some((ruleNum) => messageNums.indexOf(ruleNum) < i && messageNums.indexOf(ruleNum) !== -1) : false
-      ))
-    .map(messageNums => messageNums.sort((a, b) => dict[a]?.includes(b) ? -1 : (dict[b]?.includes(a) ? 1 : 0)))
-    .map(messageNums => messageNums[Math.floor(messageNums.length / 2)])
+  return messages.map(splitAt(","))
+    .filter(filterBrokenWith(dict))
+    .map(fixWithDict(dict))
+    .map(pickMiddleElement)
     .map(Number)
     .reduce(sum)
 

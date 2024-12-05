@@ -40,7 +40,7 @@
         "solved": true,
         "result": "166905464",
         "attempts": [],
-        "time": 0.8933
+        "time": 0.4829
       },
       "part2": {
         "solved": true,
@@ -51,7 +51,7 @@
           "86165902",
           "106414362"
         ],
-        "time": 0.1959
+        "time": 0.162
       }
     },
     {
@@ -73,13 +73,13 @@
         "solved": true,
         "result": "5452",
         "attempts": [],
-        "time": 2.5085
+        "time": 2.47
       },
       "part2": {
         "solved": true,
         "result": "4598",
         "attempts": [],
-        "time": 3.3025
+        "time": 3.1794
       }
     },
     {

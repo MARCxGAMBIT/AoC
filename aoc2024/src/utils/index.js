@@ -23,38 +23,33 @@
  *     import { myUtil } from '../utils'
  */
 
-export function parseInput(rawInput) {
-    return rawInput.split("\n").map((line) => line.trim());
-}
+export const parseInput =
+    (rawInput) => rawInput.split("\n").map((line) => line.trim())
 
-export function parseTable(rawInput) {
-    return rawInput.split("\n").map(line => line.trim().split(/\s+/));
-}
+export const parseTable = (rawInput) =>
+    rawInput
+        .split("\n")
+        .map(line => line.trim().split(/\s+/))
 
-export function parseMatrix(rawInput) {
-    return rawInput.split("\n").map((line) => line.trim().split(""));
-}
+export const parseMatrix = (rawInput) =>
+    rawInput
+        .split("\n")
+        .map((line) => line.trim().split(""))
 
-export function parseGroupedInput(rawInput) {
-    return rawInput.split("\n\n").map((group) => group.split("\n").map((line) => line.trim()));
-}
+export const parseGroupedInput = (rawInput) =>
+    rawInput
+        .split("\n\n")
+        .map((group) => group.split("\n")
+            .map((line) => line.trim()))
 
-export function transpose(matrix) {
-    return matrix[0].map((_, colIndex) => matrix.map((row) => row[colIndex]));
-}
+export const transpose = (matrix) => matrix[0].map((_, colIndex) => matrix.map((row) => row[colIndex]));
 
-export function ascending(a, b) {
-    return a - b;
-}
+export const ascending = (a, b) => a - b
 
-export function descending(a, b) {
-    return b - a;
-}
+export const descending = (a, b) => b - a
 
-export function sum(a, b) {
-    return a + b;
-}
+export const sum = (a, b) => a + b
 
-export function prod(a, b) {
-    return a * b;
-}
+export const prod = (a, b) => a * b
+
+export const splitAt = (delimiter) => (message) => message.split(delimiter)

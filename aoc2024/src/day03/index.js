@@ -1,5 +1,5 @@
 import run from "aocrunner";
-import { parseInput, sum } from "../utils/index.js";
+import { parseInput, sum, splitAt } from "../utils/index.js";
 
 const mulRegex = /mul\((\d+,\d+)\)/gs;
 const replaceRegex = /(don't\(\)).*?(do\(\))|(don't\(\)).*?$/g;
@@ -16,7 +16,7 @@ const part1 = (rawInput) => {
   return input
     .flatMap(line => [...line.matchAll(mulRegex)])
     .map(match => match[1])
-    .map(mul => mul.split(","))
+    .map(splitAt(","))
     .map(([a, b]) => a * b)
     .reduce(sum);
 };
@@ -38,7 +38,7 @@ const part2 = (rawInput) => {
       .matchAll(mulRegex)
   ]
     .map(match => match[1])
-    .map(mul => mul.split(","))
+    .map(splitAt(","))
     .map(([a, b]) => a * b)
     .reduce(sum);
 };
