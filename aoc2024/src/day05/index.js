@@ -57,7 +57,6 @@ const part2 = (rawInput) => {
     .map(pickMiddleElement)
     .map(Number)
     .reduce(sum)
-
 };
 
 /**

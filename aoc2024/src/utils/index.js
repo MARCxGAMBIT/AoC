@@ -44,6 +44,10 @@ export const parseGroupedInput = (rawInput) =>
 
 export const transpose = (matrix) => matrix[0].map((_, colIndex) => matrix.map((row) => row[colIndex]));
 
+export const rotateClockwise = (matrix) => matrix[0].map((val, index) => matrix.map(row => row[index]).reverse())
+
+export const rotateCounterClockwise = (matrix) => matrix[0].map((val, index) => matrix.map(row => row[row.length-1-index]));
+
 export const ascending = (a, b) => a - b
 
 export const descending = (a, b) => b - a
