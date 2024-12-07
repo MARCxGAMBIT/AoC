@@ -2,14 +2,39 @@ import run from "aocrunner";
 import { parseInput, sum } from "../utils/index.js";
 
 
-const valid = (nums, targetResult, ops, tempResult = nums[0], depth = 1) => {
-  if (depth === nums.length) {
-    return tempResult === targetResult;
+const valid1 = (nums, tempResult, depth = 0) => {
+  if (depth === nums.length - 1) {
+    return tempResult === nums[nums.length - 1];
   }
 
-  return ops.some(op => valid(nums, targetResult, ops, op(tempResult, nums[depth]), depth + 1));
+  const curr = nums[depth];
+
+  const addValid = subtractable(tempResult, curr);
+  const mulValid = divisable(tempResult, curr);
+
+  return addValid && valid1(nums, tempResult - curr, depth + 1)
+    || mulValid && valid1(nums, tempResult / curr, depth + 1)
 }
 
+const valid2 = (nums, tempResult, depth = 0) => {
+  if (depth === nums.length - 1) {
+    return tempResult === nums[nums.length - 1];
+  }
+
+  const curr = nums[depth];
+
+  const addValid = subtractable(tempResult, curr);
+  const mulValid = divisable(tempResult, curr);
+  const conValid = endsWith(tempResult, curr);
+
+  return addValid && valid2(nums, tempResult - curr, depth + 1)
+    || mulValid && valid2(nums, tempResult / curr, depth + 1)
+    || conValid && valid2(nums, (tempResult - curr) / Math.pow(10, Math.floor(Math.log10(curr)) + 1), depth + 1)
+}
+
+const endsWith = (a, b) => a.toString().endsWith(b);
+const divisable = (a, b) => a % b === 0;
+const subtractable = (a, b) => a >= b;
 /**
  * Calculate the solution of part 1
  * 
@@ -24,7 +49,7 @@ const part1 = (rawInput) => {
 
   return parseInput(rawInput)
     .map(line => line.split(": "))
-    .filter(([testVal, equation]) => valid(equation.split(" ").map(Number), +testVal, ops))
+    .filter(([testVal, equation]) => valid1(equation.split(" ").map(Number).reverse(), +testVal))
     .map(([testVal]) => testVal)
     .map(Number)
     .reduce(sum);
@@ -45,7 +70,8 @@ const part2 = (rawInput) => {
 
   return parseInput(rawInput)
     .map(line => line.split(": "))
-    .filter(([testVal, equation]) => valid(equation.split(" ").map(Number), +testVal, ops))
+    // .filter(([testVal, equation]) => valid(equation.split(" ").map(Number), +testVal, ops))
+    .filter(([testVal, equation]) => valid2(equation.split(" ").map(Number).reverse(), +testVal))
     .map(([testVal]) => testVal)
     .map(Number)
     .reduce(sum);

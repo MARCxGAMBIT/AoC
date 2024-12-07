@@ -1,5 +1,5 @@
 import run from "aocrunner";
-import { parseInput, parseGroupedInput, parseMatrix, parseTable, ascending, sum, rotateClockwise } from "../utils/index.js";
+import { parseMatrix } from "../utils/index.js";
 
 const findStart = matrix => {
   for (let row = 0; row < matrix.length; row++) {
@@ -9,6 +9,57 @@ const findStart = matrix => {
       }
     }
   }
+}
+
+const traverseToExit = (matrix, [row, col]) => {
+  const visited = new Set();
+  visited.add(`${row},${col}`);
+
+  let dir = 0;
+  let [maxRow, maxCol] = [matrix.length - 1, matrix[0].length - 1];
+
+  while (row > 0 && row < maxRow && col > 0 && col < maxCol) {
+    const tempRow = row + dirs[dir][0];
+    const tempCol = col + dirs[dir][1];
+
+    if (matrix[tempRow][tempCol] === "#") {
+      dir = (dir + 1) % dirs.length;
+    } else {
+      row = tempRow;
+      col = tempCol;
+      visited.add(`${row},${col}`);
+    }
+  }
+  return visited;
+}
+
+const hasLoopWithObstacle = (matrix, [obsRow, obsCol], [row, col]) => {
+  const copy = structuredClone(matrix);
+  copy[obsRow][obsCol] = "#";
+
+  let dir = 0;
+  const visited = new Set();
+  visited.add(`${row},${col},${dir}`);
+
+  let [maxRow, maxCol] = [copy.length - 1, copy[0].length - 1];
+
+  while (row > 0 && row < maxRow && col > 0 && col < maxCol) {
+    const tempRow = row + dirs[dir][0];
+    const tempCol = col + dirs[dir][1];
+
+    const tempKey = `${tempRow},${tempCol},${dir}`;
+
+    if (visited.has(tempKey)) {
+      return true;
+    } else if (copy[tempRow][tempCol] === "#") {
+      dir = (dir + 1) % dirs.length;
+    } else {
+      row = tempRow;
+      col = tempCol;
+      visited.add(tempKey);
+    }
+  }
+  return false;
 }
 
 
@@ -22,28 +73,8 @@ const dirs = [[-1, 0], [0, 1], [1, 0], [0, -1]];
  */
 const part1 = (rawInput) => {
   const matrix = parseMatrix(rawInput);
-
-  const visited = new Set();
-
-  let [row, col] = findStart(matrix);
-  let [maxRow, maxCol] = [matrix.length - 1, matrix[0].length - 1];
-  let dir = 0;
-
-  visited.add(`${row}, ${col}`);
-  while (row !== 0 && row !== maxRow && col !== 0 && col !== maxCol) {
-    const tempRow = row + dirs[dir][0];
-    const tempCol = col + dirs[dir][1];
-
-    if (matrix[tempRow][tempCol] === "#") {
-      dir = (dir + 1) % dirs.length;
-    } else {
-      row = tempRow;
-      col = tempCol;
-      visited.add(`${row}, ${col}`);
-    }
-  }
-
-  return visited.size;
+  const start = findStart(matrix);
+  return traverseToExit(matrix, start).size
 };
 
 /**
@@ -54,71 +85,14 @@ const part1 = (rawInput) => {
  */
 const part2 = (rawInput) => {
   const matrix = parseMatrix(rawInput);
+  const start = findStart(matrix);
+  const visited = traverseToExit(matrix, start);
 
-  const visited = {};
-
-  let [row, col] = findStart(matrix);
-  let [maxRow, maxCol] = [matrix.length - 1, matrix[0].length - 1];
-  let dir = 0;
-  let counter = 0;
-
-  visited[`${row},${col},${dir}`] = counter;
-
-  while (row !== 0 && row !== maxRow && col !== 0 && col !== maxCol) {
-    const tempRow = row + dirs[dir][0];
-    const tempCol = col + dirs[dir][1];
-
-    if (matrix[tempRow][tempCol] === "#") {
-      dir = (dir + 1) % dirs.length;
-    } else {
-      counter++;
-      row = tempRow;
-      col = tempCol;
-      visited[`${row},${col},${dir}`] = counter;
-    }
-  }
-
-
-  const todo = Object.keys(visited).reverse();
-
-  return todo.map((key, i) => {
-    const todoKey = todo[i+1];
-    
-    if (!todoKey) {
-      return 0;
-    }
-    const [curRow, curCol] = key.split(",");
-    matrix[curRow][curCol] = "#"
-    
-    const visitedSim = new Set();
-    let counter = visited[todoKey];
-    let [row, col, dir] = todoKey.split(",").map(Number);
-    dir = (dir + 1) % dirs.length;
-
-    visitedSim.add([row, col, dir].join(","))
-    
-    while (row !== 0 && row !== maxRow && col !== 0 && col !== maxCol) {
-      const tempRow = row + dirs[dir][0];
-      const tempCol = col + dirs[dir][1];
-
-      if (matrix[tempRow][tempCol] === "#") {
-        dir = (dir + 1) % dirs.length;
-      } else {
-        row = tempRow;
-        col = tempCol;
-
-        if (visited[[row, col, dir].join(",")] < counter || visitedSim.has([row, col, dir].join(","))) {
-          matrix[curRow][curCol] = "."
-          return 1;
-        }
-
-        visitedSim.add([row, col, dir].join(","))
-      }
-    }
-    matrix[curRow][curCol] = "."
-    return 0;
-  }).reduce(sum);
-
+  return [...visited.keys()]
+    .slice(1)
+    .map(key => key.split(","))
+    .filter(coords => hasLoopWithObstacle(matrix, coords, start))
+    .length;
 };
 
 /**
