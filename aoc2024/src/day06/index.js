@@ -83,11 +83,13 @@ const part2 = (rawInput) => {
 
   return todo.map((key, i) => {
     const todoKey = todo[i+1];
-    // console.log("process next todo: ", todoKey);
+    
     if (!todoKey) {
       return 0;
     }
-
+    const [curRow, curCol] = key.split(",");
+    matrix[curRow][curCol] = "#"
+    
     const visitedSim = new Set();
     let counter = visited[todoKey];
     let [row, col, dir] = todoKey.split(",").map(Number);
@@ -106,12 +108,14 @@ const part2 = (rawInput) => {
         col = tempCol;
 
         if (visited[[row, col, dir].join(",")] < counter || visitedSim.has([row, col, dir].join(","))) {
+          matrix[curRow][curCol] = "."
           return 1;
         }
 
         visitedSim.add([row, col, dir].join(","))
       }
     }
+    matrix[curRow][curCol] = "."
     return 0;
   }).reduce(sum);
 
