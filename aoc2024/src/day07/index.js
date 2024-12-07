@@ -1,5 +1,14 @@
 import run from "aocrunner";
-import { parseInput, parseGroupedInput, parseMatrix, parseTable, ascending, sum } from "../utils/index.js";
+import { parseInput, sum } from "../utils/index.js";
+
+
+const valid = (nums, targetResult, ops, tempResult = nums[0], depth = 1) => {
+  if (depth === nums.length) {
+    return tempResult === targetResult;
+  }
+
+  return ops.some(op => valid(nums, targetResult, ops, op(tempResult, nums[depth]), depth + 1));
+}
 
 /**
  * Calculate the solution of part 1
@@ -8,40 +17,14 @@ import { parseInput, parseGroupedInput, parseMatrix, parseTable, ascending, sum 
  * @returns {Number} solution to the problem
 */
 const part1 = (rawInput) => {
-  const ops = ["+", "*"];
-  const input = parseInput(rawInput).map(line => line.split(": "));
+  const ops = [
+    (a, b) => a + b,
+    (a, b) => a * b
+  ];
 
-  return input
-    .filter(([testVal, equation]) => {
-
-      const nums = equation.split(" ");
-      const opCount = nums.length - 1;
-      const permCount = parseInt("1".repeat(opCount), 2) + 1;
-
-      const perms = Array
-        .from({ length: permCount }, (_, i) => i.toString(2).padStart(opCount, "0"))
-        .map(perm => perm.replaceAll(/0|1/g, (matched) => ops[matched]))
-        .map(perm => perm.split(""));
-
-      return perms
-        .map(permOps => {
-          return nums
-            .reduce((accu, curr, i) => {
-              if (i === 0) {
-                accu.push("(".repeat(nums.length))
-              }
-              accu.push(curr);
-              accu.push(")")
-              if (permOps[i]) {
-                accu.push(permOps[i]);
-              }
-              return accu;
-            }, [])
-        })
-        .map(eq => eval(eq.join("")))
-        .some(solution => solution == testVal)
-
-    })
+  return parseInput(rawInput)
+    .map(line => line.split(": "))
+    .filter(([testVal, equation]) => valid(equation.split(" ").map(Number), +testVal, ops))
     .map(([testVal]) => testVal)
     .map(Number)
     .reduce(sum);
@@ -54,41 +37,15 @@ const part1 = (rawInput) => {
  * @returns {Number} solution to the problem
  */
 const part2 = (rawInput) => {
-  const ops = ["+", "*", "|"];
-  const input = parseInput(rawInput).map(line => line.split(": "));
+  const ops = [
+    (a, b) => a + b,
+    (a, b) => a * b,
+    (a, b) => +(`${a}${b}`),
+  ];
 
-  return input
-    .filter(([testVal, equation]) => {
-
-      const nums = equation.split(" ");
-      const opCount = nums.length - 1;
-      const permCount = parseInt("2".repeat(opCount), 3) + 1;
-
-      const perms = Array
-        .from({ length: permCount }, (_, i) => i.toString(3).padStart(opCount, "0"))
-        .map(perm => perm.replaceAll(/0|1|2/g, (matched) => ops[matched]))
-        .map(perm => perm.split(""));
-
-      return perms
-        .map(permOps => {
-          return nums
-            .reduce((accu, curr, i) => {
-              if (i === 0) {
-                accu.push("(+".repeat(nums.length))
-              }
-              const prevOp = permOps[i-1];
-              const op = permOps[i];
-              accu.push(prevOp === "|" ? `'${curr}'`: curr);
-              accu.push(")")
-              if (op) {
-                accu.push(op === "|" ? "+" : op);
-              }
-              return accu;
-            }, [])
-        })
-        .map(eq => eq.join(""))
-        .some(eq => eval(eq) == testVal)
-    })
+  return parseInput(rawInput)
+    .map(line => line.split(": "))
+    .filter(([testVal, equation]) => valid(equation.split(" ").map(Number), +testVal, ops))
     .map(([testVal]) => testVal)
     .map(Number)
     .reduce(sum);
