@@ -1,8 +1,7 @@
 import run from "aocrunner";
 import { parseInput, sum } from "../utils/index.js";
 
-
-const valid1 = (nums, tempResult, depth = 0) => {
+const valid = (nums, tempResult, considerCon, depth = 0) => {
   if (depth === nums.length - 1) {
     return tempResult === nums[nums.length - 1];
   }
@@ -11,25 +10,11 @@ const valid1 = (nums, tempResult, depth = 0) => {
 
   const addValid = subtractable(tempResult, curr);
   const mulValid = divisable(tempResult, curr);
+  const conValid = considerCon && endsWith(tempResult, curr);
 
-  return addValid && valid1(nums, tempResult - curr, depth + 1)
-    || mulValid && valid1(nums, tempResult / curr, depth + 1)
-}
-
-const valid2 = (nums, tempResult, depth = 0) => {
-  if (depth === nums.length - 1) {
-    return tempResult === nums[nums.length - 1];
-  }
-
-  const curr = nums[depth];
-
-  const addValid = subtractable(tempResult, curr);
-  const mulValid = divisable(tempResult, curr);
-  const conValid = endsWith(tempResult, curr);
-
-  return addValid && valid2(nums, tempResult - curr, depth + 1)
-    || mulValid && valid2(nums, tempResult / curr, depth + 1)
-    || conValid && valid2(nums, (tempResult - curr) / Math.pow(10, Math.floor(Math.log10(curr)) + 1), depth + 1)
+  return addValid && valid(nums, tempResult - curr, considerCon, depth + 1)
+    || mulValid && valid(nums, tempResult / curr, considerCon, depth + 1)
+    || conValid && valid(nums, (tempResult - curr) / 10 ** (Math.floor(Math.log10(curr)) + 1), considerCon, depth + 1)
 }
 
 const endsWith = (a, b) => a.toString().endsWith(b);
@@ -42,14 +27,10 @@ const subtractable = (a, b) => a >= b;
  * @returns {Number} solution to the problem
 */
 const part1 = (rawInput) => {
-  const ops = [
-    (a, b) => a + b,
-    (a, b) => a * b
-  ];
 
   return parseInput(rawInput)
     .map(line => line.split(": "))
-    .filter(([testVal, equation]) => valid1(equation.split(" ").map(Number).reverse(), +testVal))
+    .filter(([testVal, equation]) => valid(equation.split(" ").map(Number).reverse(), +testVal, false))
     .map(([testVal]) => testVal)
     .map(Number)
     .reduce(sum);
@@ -62,16 +43,11 @@ const part1 = (rawInput) => {
  * @returns {Number} solution to the problem
  */
 const part2 = (rawInput) => {
-  const ops = [
-    (a, b) => a + b,
-    (a, b) => a * b,
-    (a, b) => +(`${a}${b}`),
-  ];
 
   return parseInput(rawInput)
     .map(line => line.split(": "))
     // .filter(([testVal, equation]) => valid(equation.split(" ").map(Number), +testVal, ops))
-    .filter(([testVal, equation]) => valid2(equation.split(" ").map(Number).reverse(), +testVal))
+    .filter(([testVal, equation]) => valid(equation.split(" ").map(Number).reverse(), +testVal, true))
     .map(([testVal]) => testVal)
     .map(Number)
     .reduce(sum);
