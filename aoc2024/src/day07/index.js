@@ -46,7 +46,6 @@ const part2 = (rawInput) => {
 
   return parseInput(rawInput)
     .map(line => line.split(": "))
-    // .filter(([testVal, equation]) => valid(equation.split(" ").map(Number), +testVal, ops))
     .filter(([testVal, equation]) => valid(equation.split(" ").map(Number).reverse(), +testVal, true))
     .map(([testVal]) => testVal)
     .map(Number)
