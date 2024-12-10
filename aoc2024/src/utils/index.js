@@ -36,6 +36,11 @@ export const parseMatrix = (rawInput) =>
         .split("\n")
         .map((line) => line.trim().split(""))
 
+export const parseNumMatrix = (rawInput) =>
+    rawInput
+        .split("\n")
+        .map((line) => line.trim().split("").map(Number))
+
 export const parseGroupedInput = (rawInput) =>
     rawInput
         .split("\n\n")
@@ -46,7 +51,7 @@ export const transpose = (matrix) => matrix[0].map((_, colIndex) => matrix.map((
 
 export const rotateClockwise = (matrix) => matrix[0].map((val, index) => matrix.map(row => row[index]).reverse())
 
-export const rotateCounterClockwise = (matrix) => matrix[0].map((val, index) => matrix.map(row => row[row.length-1-index]));
+export const rotateCounterClockwise = (matrix) => matrix[0].map((val, index) => matrix.map(row => row[row.length - 1 - index]));
 
 export const ascending = (a, b) => a - b
 
