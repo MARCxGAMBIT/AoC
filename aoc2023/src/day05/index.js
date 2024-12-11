@@ -1,8 +1,6 @@
 import run from "aocrunner";
 
-import { Worker, isMainThread } from "worker_threads";
-
-const __dirname = new URL(".", import.meta.url).pathname;
+import { Worker } from "worker_threads";
 
 const parseInput = (rawInput) => rawInput.split("\n");
 
@@ -51,7 +49,7 @@ const part1 = (rawInput) => {
 
 const part2 = async (rawInput) => {
   const input = parseInput(rawInput);
-  const [seedsLine, ...rest] = input;
+  const [seedsLine] = input;
   const seedsInfo = findNumbersInString(seedsLine).reduce((acc, curr, i) => {
     if (i % 2 === 0) {
       acc.push([curr]);
@@ -61,7 +59,7 @@ const part2 = async (rawInput) => {
     return acc;
   }, []);
 
-  const minLocation = await new Promise((resolve, reject) => {
+  const minLocation = await new Promise((resolve) => {
     const threads = new Set();
     const locations = [];
     for (const [i, workerData] of seedsInfo.entries()) {

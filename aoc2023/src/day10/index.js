@@ -3,19 +3,19 @@ import run from "aocrunner";
 const parseInput = (rawInput) =>
   rawInput.split("\n").map((line) => line.trim().split(""));
 
-const m = {
-  "|": "┃",
-  "-": "━",
-  "L": "┗",
-  "J": "┛",
-  "F": "┏",
-  "7": "┓",
-  "S": "╋",
-  ".": ".",
-};
+// const m = {
+//   "|": "┃",
+//   "-": "━",
+//   "L": "┗",
+//   "J": "┛",
+//   "F": "┏",
+//   "7": "┓",
+//   "S": "╋",
+//   ".": ".",
+// };
 
-const printInput = (input) =>
-  input.map((line) => line.join("").replaceAll(/./g, (x) => m[x])).join("\n");
+// const printInput = (input) =>
+//   input.map((line) => line.join("").replaceAll(/./g, (x) => m[x])).join("\n");
 
 const dirMap = {
   E: [0, 1],

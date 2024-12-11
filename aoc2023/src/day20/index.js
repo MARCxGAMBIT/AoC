@@ -12,7 +12,7 @@ class BroadCaster {
     this.queue = queue;
   }
 
-  receive(pulse, name) {
+  receive() {
     this.send();
   }
 
@@ -45,7 +45,7 @@ class FlipFlop {
     }
   }
 
-  receive(pulse, name) {
+  receive(pulse) {
     if (pulse === "L") {
       this.state = !this.state;
       this.send();

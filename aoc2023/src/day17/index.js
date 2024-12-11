@@ -4,24 +4,24 @@ import { MinPriorityQueue } from "@datastructures-js/priority-queue";
 const parseInput = (rawInput) =>
   rawInput.split("\n").map((line) => line.trim().split("").map(Number));
 
-class PriorityQueue {
-  constructor() {
-    this.elements = [];
-  }
+// class PriorityQueue {
+//   constructor() {
+//     this.elements = [];
+//   }
 
-  push(item, priority, direction) {
-    const insertAt = this.elements.findIndex((e) => e.priority > priority);
-    this.elements.splice(insertAt, 0, { item, priority, direction });
-  }
+//   push(item, priority, direction) {
+//     const insertAt = this.elements.findIndex((e) => e.priority > priority);
+//     this.elements.splice(insertAt, 0, { item, priority, direction });
+//   }
 
-  shift() {
-    return this.elements.shift();
-  }
+//   shift() {
+//     return this.elements.shift();
+//   }
 
-  isEmpty() {
-    return this.elements.length === 0;
-  }
-}
+//   isEmpty() {
+//     return this.elements.length === 0;
+//   }
+// }
 
 const dirs = [
   [0, 1],

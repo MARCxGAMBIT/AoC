@@ -1,12 +1,5 @@
 import run from "aocrunner";
-import {
-  parseInput,
-  parseGroupedInput,
-  parseNumMatrix,
-  parseTable,
-  ascending,
-  sum,
-} from "../utils/index.js";
+import { parseNumMatrix, sum } from "../utils/index.js";
 
 const dirs = [
   [-1, 0],

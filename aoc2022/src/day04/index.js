@@ -1,5 +1,5 @@
 import run from "aocrunner";
-import { parseInput, parseGroupedInput, parseMatrix } from "../utils/index.js";
+import { parseInput } from "../utils/index.js";
 
 const overlaps = ([a, b]) =>
   (a[0] <= b[0] && a[1] >= b[1]) || (a[0] >= b[0] && a[1] <= b[1]);

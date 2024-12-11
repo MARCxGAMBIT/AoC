@@ -4,13 +4,17 @@
   "description": "AoC collection",
   "scripts": {
     "format": "prettier -w",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint **/*.js",
+    "lint:fix": "eslint --fix **/*.js",
     "prepare": "husky"
   },
   "author": "Marc Schleeweiß",
   "license": "ISC",
   "devDependencies": {
+    "@eslint/js": "^9.16.0",
     "@yikes2000/prettier-plugin-merge-extras": "^0.7.1-extras.4",
+    "eslint": "^9.16.0",
+    "globals": "^15.13.0",
     "lint-staged": "^15.2.11",
     "prettier": "^3.4.2"
   },

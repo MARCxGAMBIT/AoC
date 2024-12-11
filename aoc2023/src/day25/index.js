@@ -1,5 +1,4 @@
 import run from "aocrunner";
-import { writeFile } from "node:fs/promises";
 import { Graph, Edge, kargerMinCut } from "./karger.js";
 
 const parseInput = (rawInput) =>
