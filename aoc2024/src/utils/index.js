@@ -62,3 +62,17 @@ export const sum = (a, b) => a + b
 export const prod = (a, b) => a * b
 
 export const splitAt = (delimiter) => (message) => message.split(delimiter)
+
+export const cache = (fn) => {
+    const mem = new Map();
+    return function(...args) {
+        const key = JSON.stringify(args);
+        if (mem.has(key)) {
+            return mem.get(key);
+        }
+
+        const result = fn.apply(this, args);
+        mem.set(key, result);
+        return result;
+    }
+}
