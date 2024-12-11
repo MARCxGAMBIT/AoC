@@ -1,11 +1,13 @@
 {
   "arrowParens": "always",
   "bracketSpacing": true,
+  "experimentalTernaries": true,
   "printWidth": 80,
   "proseWrap": "preserve",
   "semi": true,
   "singleQuote": false,
   "tabWidth": 2,
   "useTabs": false,
-  "trailingComma": "all"
+  "trailingComma": "all",
+  "plugins": ["@yikes2000/prettier-plugin-merge-extras"]
 }
