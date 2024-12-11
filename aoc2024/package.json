@@ -16,8 +16,7 @@
   "devDependencies": {
     "@types/node": "^16.11.6",
     "@yikes2000/prettier-plugin-merge-extras": "^0.7.1-extras.4",
-    "aocrunner": "^1.10.0",
-    "prettier": "^3.4.2"
+    "aocrunner": "^1.10.0"
   },
   "engines": {
     "node": ">=16.13.0"
