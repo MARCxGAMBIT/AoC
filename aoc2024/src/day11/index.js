@@ -1,5 +1,21 @@
 import run from "aocrunner";
-import { parseInput, cache } from "../utils/index.js";
+import { parseInput, cache, sum } from "../utils/index.js";
+
+const countStones = cache((n, depth) => {
+  if (depth === 0) {
+    return 1;
+  }
+  if (n === "0") {
+    return countStones("1", depth - 1);
+  }
+  if (n.length % 2) {
+    return countStones(`${n * 2024}`, depth - 1);
+  }
+  return (
+    countStones(n.slice(0, n.length / 2), depth - 1) +
+    countStones(`${Number(n.slice(n.length / 2))}`, depth - 1)
+  );
+});
 
 /**
  * Calculate the solution of part 1
@@ -8,20 +24,12 @@ import { parseInput, cache } from "../utils/index.js";
  * @returns {Number} solution to the problem
  */
 const part1 = (rawInput) => {
-  const input = parseInput(rawInput)[0].split(" ");
-
-  let stones = input;
-
-  for (let i = 0; i < 25; i++) {
-    stones = stones.flatMap((n) =>
-      n == 0 ? "1"
-      : n.length % 2 == 0 ?
-        [n.substring(0, n.length / 2), n.substring(n.length / 2).toString()]
-      : (n * 2024).toString(),
-    );
-  }
-
-  return stones.length;
+  const stones = parseInput(rawInput)[0].split(" ");
+  return (
+    stones
+      .map((n) => countStones(n, 25))
+      .reduce(sum)
+  );
 };
 
 /**
@@ -31,32 +39,12 @@ const part1 = (rawInput) => {
  * @returns {Number} solution to the problem
  */
 const part2 = (rawInput) => {
-  const input = parseInput(rawInput)[0].split(" ");
-
-  let stones = input;
-
-  for (let i = 0; i < 1; i++) {
-    stones = stones.flatMap((n) =>
-      n == 0 ? "1"
-      : n.length % 2 == 0 ?
-        [
-          n.substring(0, n.length / 2),
-          BigInt(n.substring(n.length / 2)).toString(),
-        ]
-      : BigInt(n * 2024).toString(),
-    );
-  }
-
-  const a = input
-    .join("")
-    .split("")
-    .join("")
-    .split("")
-    .join("");
-
-  console.log(stones);
-
-  return stones.length;
+  const stones = parseInput(rawInput)[0].split(" ");
+  return (
+    stones
+      .map((n) => countStones(n, 75))
+      .reduce(sum)
+  );
 };
 
 /**
@@ -75,8 +63,8 @@ run({
   part2: {
     tests: [
       {
-        input: `0`,
-        expected: 0,
+        input: `125 17`,
+        expected: 65601038650482,
       },
     ],
     solution: part2,
