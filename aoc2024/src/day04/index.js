@@ -1,8 +1,5 @@
 import run from "aocrunner";
-import {
-  parseMatrix,
-  sum,
-} from "../utils/index.js";
+import { parseMatrix, sum } from "../utils/index.js";
 
 /**
  * Calculate the solution of part 1

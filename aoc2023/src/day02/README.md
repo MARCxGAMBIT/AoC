@@ -21,6 +21,7 @@ const part2 = (i) => parseInput(i)
 ```
 
 Part 2 loooooops
+
 ```
 const part2 = (rawInput) => {
   const input = parseInput(rawInput);

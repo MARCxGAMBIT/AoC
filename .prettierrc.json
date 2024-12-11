@@ -6,6 +6,7 @@
   "proseWrap": "preserve",
   "semi": true,
   "singleQuote": false,
+  "quoteProps": "consistent",
   "tabWidth": 2,
   "useTabs": false,
   "trailingComma": "all",

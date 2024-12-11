@@ -41,9 +41,11 @@ const dfs = (map, visited, currRow, currCol, prevRow, prevCol) => {
     return 0;
   }
 
-  return neighbors
-    .map(([row, col]) => dfs(map, visited, row, col, currRow, currCol))
-    .reduce(sum);
+  return (
+    neighbors
+      .map(([row, col]) => dfs(map, visited, row, col, currRow, currCol))
+      .reduce(sum)
+  );
 };
 /**
  * Calculate the solution of part 1
