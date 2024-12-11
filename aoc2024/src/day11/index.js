@@ -48,10 +48,11 @@ const part2 = (rawInput) => {
   }
 
   const a = input
-.join("")
-.split("")
-.join("")
-.split("");
+    .join("")
+    .split("")
+    .join("")
+    .split("")
+    .join("");
 
   console.log(stones);
 

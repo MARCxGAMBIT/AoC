@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "AoC collection",
   "scripts": {
-    "format": "prettier . -w",
+    "format": "prettier -w",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "husky"
   },
@@ -11,9 +11,10 @@
   "license": "ISC",
   "devDependencies": {
     "@yikes2000/prettier-plugin-merge-extras": "^0.7.1-extras.4",
+    "lint-staged": "^15.2.11",
     "prettier": "^3.4.2"
   },
   "lint-staged": {
-    "*.-w": "npm run format"
+    "*": "npm run format"
   }
 }
