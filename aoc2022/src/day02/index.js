@@ -4,20 +4,22 @@ const parseInput = (rawInput) =>
   rawInput.split("\n").map((line) => line.trim());
 
 const analyseMoves = (moves) => {
-  return moves
-    .map(([opponent, me]) => [
-      opponent.charCodeAt(0) - 64,
-      me.charCodeAt(0) - 87,
-    ])
-    .reduce((acc, [opponent, me]) => {
-      if (opponent === me) {
-        acc += 3;
-      } else if ((opponent - me + 3) % 3 === 2) {
-        acc += 6;
-      }
-      acc += me;
-      return acc;
-    }, 0);
+  return (
+    moves
+      .map(([opponent, me]) => [
+        opponent.charCodeAt(0) - 64,
+        me.charCodeAt(0) - 87,
+      ])
+      .reduce((acc, [opponent, me]) => {
+        if (opponent === me) {
+          acc += 3;
+        } else if ((opponent - me + 3) % 3 === 2) {
+          acc += 6;
+        }
+        acc += me;
+        return acc;
+      }, 0)
+  );
 };
 
 const part1 = (rawInput) => {

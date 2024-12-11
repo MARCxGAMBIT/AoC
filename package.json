@@ -4,12 +4,16 @@
   "description": "AoC collection",
   "scripts": {
     "format": "prettier . -w",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky"
   },
   "author": "Marc Schleeweiß",
   "license": "ISC",
   "devDependencies": {
     "@yikes2000/prettier-plugin-merge-extras": "^0.7.1-extras.4",
     "prettier": "^3.4.2"
+  },
+  "lint-staged": {
+    "*.-w": "npm run format"
   }
 }

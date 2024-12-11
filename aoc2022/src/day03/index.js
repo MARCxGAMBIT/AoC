@@ -35,31 +35,35 @@ const getPriority = (set) => {
 
 const part1 = (rawInput) => {
   const input = parseInput(rawInput);
-  return input
-    .map((line) =>
-      getIntersection(
-        line.slice(0, line.length / 2),
-        line.slice(line.length / 2),
-      ),
-    )
-    .map((set) => getPriority(set))
-    .reduce(sum, 0);
+  return (
+    input
+      .map((line) =>
+        getIntersection(
+          line.slice(0, line.length / 2),
+          line.slice(line.length / 2),
+        ),
+      )
+      .map((set) => getPriority(set))
+      .reduce(sum, 0)
+  );
 };
 
 const part2 = (rawInput) => {
   const input = parseInput(rawInput);
 
-  return input
-    .reduce((acc, line, i) => {
-      if (i % 3 === 0) {
-        acc.push([]);
-      }
-      acc.at(-1).push(line);
-      return acc;
-    }, [])
-    .map(([a, b, c]) => getIntersection2(a, b, c))
-    .map((set) => getPriority(set))
-    .reduce(sum, 0);
+  return (
+    input
+      .reduce((acc, line, i) => {
+        if (i % 3 === 0) {
+          acc.push([]);
+        }
+        acc.at(-1).push(line);
+        return acc;
+      }, [])
+      .map(([a, b, c]) => getIntersection2(a, b, c))
+      .map((set) => getPriority(set))
+      .reduce(sum, 0)
+  );
 };
 
 run({

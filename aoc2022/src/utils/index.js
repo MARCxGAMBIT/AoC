@@ -7,9 +7,11 @@ export function parseMatrix(rawInput) {
 }
 
 export function parseGroupedInput(rawInput) {
-  return rawInput
-    .split("\n\n")
-    .map((group) => group.split("\n").map((line) => line.trim()));
+  return (
+    rawInput
+      .split("\n\n")
+      .map((group) => group.split("\n").map((line) => line.trim()))
+  );
 }
 
 export function transpose(matrix) {

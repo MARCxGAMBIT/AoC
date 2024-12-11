@@ -47,6 +47,12 @@ const part2 = (rawInput) => {
     );
   }
 
+  const a = input
+.join("")
+.split("")
+.join("")
+.split("");
+
   console.log(stones);
 
   return stones.length;
