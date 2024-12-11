@@ -17,23 +17,27 @@ class Solver {
   separateIdsIntoTwoLists() {
     this.twoLists = this.table
       .reduce(
-        ([listA, listB], [eleA, eleB]) => (listA.push(eleA), listB.push(eleB), [listA, listB]),
-        [[], []]
+        ([listA, listB], [eleA, eleB]) => (
+          listA.push(eleA), listB.push(eleB), [listA, listB]
+        ),
+        [[], []],
       );
     return this;
   }
 
   sortListAscending() {
-    this.sortedLists = this.twoLists.map(list => list.sort());
+    this.sortedLists = this.twoLists.map((list) => list.sort());
     return this;
   }
 
   calculateDistance() {
     const [first, second] = this.sortedLists;
 
-    return first
-      .map((id, i) => Math.abs(id - second[i]))
-      .reduce(sum);
+    return (
+      first
+        .map((id, i) => Math.abs(id - second[i]))
+        .reduce(sum)
+    );
   }
 
   calculateOccurences() {
@@ -44,36 +48,38 @@ class Solver {
       return acc;
     }, {});
 
-    return first
-      .map(a => a * (occ[a] ?? 0))
-      .reduce(sum);
+    return (
+      first
+        .map((a) => a * (occ[a] ?? 0))
+        .reduce(sum)
+    );
   }
-
 }
 
 /**
  * Calculate the solution of part 1
- * 
- * @param {string} rawInput 
+ *
+ * @param {string} rawInput
  * @returns {Number} solution to the problem
  */
-const part1 = (rawInput) => new Solver(rawInput)
-  .parseInput()
-  .separateIdsIntoTwoLists()
-  .sortListAscending()
-  .calculateDistance();
+const part1 = (rawInput) =>
+  new Solver(rawInput)
+    .parseInput()
+    .separateIdsIntoTwoLists()
+    .sortListAscending()
+    .calculateDistance();
 
 /**
  * Calculate the solution of part 2
- * 
- * @param {string} rawInput 
+ *
+ * @param {string} rawInput
  * @returns {Number} solution to the problem
  */
-const part2 = (rawInput) => new Solver(rawInput)
-  .parseInput()
-  .separateIdsIntoTwoLists()
-  .calculateOccurences();
-
+const part2 = (rawInput) =>
+  new Solver(rawInput)
+    .parseInput()
+    .separateIdsIntoTwoLists()
+    .calculateOccurences();
 
 /**
  * AoC Runner
@@ -108,5 +114,5 @@ run({
     solution: part2,
   },
   trimTestInputs: true,
-  onlyTests: false
+  onlyTests: false,
 });

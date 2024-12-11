@@ -1,7 +1,7 @@
 import run from "aocrunner";
 import { parseMatrix } from "../utils/index.js";
 
-const findStart = matrix => {
+const findStart = (matrix) => {
   for (let row = 0; row < matrix.length; row++) {
     for (let col = 0; col < matrix[row].length; col++) {
       if (matrix[row][col] === "^") {
@@ -9,7 +9,7 @@ const findStart = matrix => {
       }
     }
   }
-}
+};
 
 const traverseToExit = (matrix, [row, col]) => {
   const visited = new Set();
@@ -31,7 +31,7 @@ const traverseToExit = (matrix, [row, col]) => {
     }
   }
   return visited;
-}
+};
 
 const hasLoopWithObstacle = (matrix, [obsRow, obsCol], [row, col]) => {
   const copy = structuredClone(matrix);
@@ -60,27 +60,31 @@ const hasLoopWithObstacle = (matrix, [obsRow, obsCol], [row, col]) => {
     }
   }
   return false;
-}
+};
 
-
-const dirs = [[-1, 0], [0, 1], [1, 0], [0, -1]];
+const dirs = [
+  [-1, 0],
+  [0, 1],
+  [1, 0],
+  [0, -1],
+];
 
 /**
  * Calculate the solution of part 1
- * 
- * @param {string} rawInput 
+ *
+ * @param {string} rawInput
  * @returns {Number} solution to the problem
  */
 const part1 = (rawInput) => {
   const matrix = parseMatrix(rawInput);
   const start = findStart(matrix);
-  return traverseToExit(matrix, start).size
+  return traverseToExit(matrix, start).size;
 };
 
 /**
  * Calculate the solution of part 2
- * 
- * @param {string} rawInput 
+ *
+ * @param {string} rawInput
  * @returns {Number} solution to the problem
  */
 const part2 = (rawInput) => {
@@ -88,11 +92,12 @@ const part2 = (rawInput) => {
   const start = findStart(matrix);
   const visited = traverseToExit(matrix, start);
 
-  return [...visited.keys()]
-    .slice(1)
-    .map(key => key.split(","))
-    .filter(coords => hasLoopWithObstacle(matrix, coords, start))
-    .length;
+  return (
+    [...visited.keys()]
+      .slice(1)
+      .map((key) => key.split(","))
+      .filter((coords) => hasLoopWithObstacle(matrix, coords, start)).length
+  );
 };
 
 /**

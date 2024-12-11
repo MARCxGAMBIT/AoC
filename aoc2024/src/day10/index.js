@@ -1,15 +1,33 @@
 import run from "aocrunner";
-import { parseInput, parseGroupedInput, parseNumMatrix, parseTable, ascending, sum } from "../utils/index.js";
+import {
+  parseInput,
+  parseGroupedInput,
+  parseNumMatrix,
+  parseTable,
+  ascending,
+  sum,
+} from "../utils/index.js";
 
-const dirs = [[-1, 0], [0, 1], [1, 0], [0, -1]];
+const dirs = [
+  [-1, 0],
+  [0, 1],
+  [1, 0],
+  [0, -1],
+];
 
-const coordsValid = (map) => (([row, col]) => row >= 0 && row < map.length && col >= 0 && col < map[row].length);
+const coordsValid =
+  (map) =>
+  ([row, col]) =>
+    row >= 0 && row < map.length && col >= 0 && col < map[row].length;
 
-const coordsReachable = (map, prevHeight) => (([row, col]) => map[row][col] === prevHeight + 1);
+const coordsReachable =
+  (map, prevHeight) =>
+  ([row, col]) =>
+    map[row][col] === prevHeight + 1;
 
 const dfs = (map, visited, currRow, currCol, prevRow, prevCol) => {
   if (map[currRow][currCol] === 9) {
-    visited.add(`${currRow},${currCol}`)
+    visited.add(`${currRow},${currCol}`);
     return 1;
   }
 
@@ -17,19 +35,20 @@ const dfs = (map, visited, currRow, currCol, prevRow, prevCol) => {
     .map(([row, col]) => [currRow + row, currCol + col])
     .filter(([row, col]) => row !== prevRow || col !== prevCol)
     .filter(coordsValid(map))
-    .filter(coordsReachable(map, map[currRow][currCol])) 
+    .filter(coordsReachable(map, map[currRow][currCol]));
 
   if (neighbors.length === 0) {
     return 0;
   }
 
-  return neighbors.map(([row, col]) => dfs(map, visited, row, col, currRow, currCol)).reduce(sum);
-
-}
+  return neighbors
+    .map(([row, col]) => dfs(map, visited, row, col, currRow, currCol))
+    .reduce(sum);
+};
 /**
  * Calculate the solution of part 1
- * 
- * @param {string} rawInput 
+ *
+ * @param {string} rawInput
  * @returns {Number} solution to the problem
  */
 const part1 = (rawInput) => {
@@ -50,8 +69,8 @@ const part1 = (rawInput) => {
 
 /**
  * Calculate the solution of part 2
- * 
- * @param {string} rawInput 
+ *
+ * @param {string} rawInput
  * @returns {Number} solution to the problem
  */
 const part2 = (rawInput) => {
@@ -85,7 +104,7 @@ run({
 01329801
 10456732`,
         expected: 36,
-      }
+      },
     ],
     solution: part1,
   },

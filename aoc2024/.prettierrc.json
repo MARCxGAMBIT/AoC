@@ -9,5 +9,10 @@
   "tabWidth": 2,
   "useTabs": false,
   "trailingComma": "all",
-  "plugins": ["@yikes2000/prettier-plugin-merge-extras"]
+  "plugins": ["@yikes2000/prettier-plugin-merge-extras"],
+  "alignObjectProperties": "none",
+  "preserveFirstBlankLine": false,
+  "preserveLastBlankLine": false,
+  "returnParentheses": true,
+  "alignSingleProperty": false
 }

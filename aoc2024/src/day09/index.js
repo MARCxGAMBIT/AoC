@@ -3,15 +3,15 @@ import { parseInput, sum, prod } from "../utils/index.js";
 
 /**
  * Calculate the solution of part 1
- * 
- * @param {string} rawInput 
+ *
+ * @param {string} rawInput
  * @returns {Number} solution to the problem
  */
 const part1 = (rawInput) => {
   const diskMap = [...parseInput(rawInput)[0]];
 
   const discSpace = diskMap.flatMap((x, i) => {
-    return i % 2 === 0 ? Array(+x).fill((i / 2)) : Array(+x).fill(".")
+    return i % 2 === 0 ? Array(+x).fill(i / 2) : Array(+x).fill(".");
   });
 
   for (let i = discSpace.length - 1; i >= 0; --i) {
@@ -26,14 +26,14 @@ const part1 = (rawInput) => {
     }
   }
 
-  const usedSpace = discSpace.slice(0, discSpace.indexOf("."))
+  const usedSpace = discSpace.slice(0, discSpace.indexOf("."));
   return usedSpace.map(prod).reduce(sum);
 };
 
 /**
  * Calculate the solution of part 2
- * 
- * @param {string} rawInput 
+ *
+ * @param {string} rawInput
  * @returns {Number} solution to the problem
  */
 const part2 = (rawInput) => {
@@ -42,14 +42,16 @@ const part2 = (rawInput) => {
   const diskSpace = diskMap.flatMap((x, i) => {
     return {
       len: +x,
-      val: i % 2 === 0 ? (i / 2).toString() : "."
-    }
+      val: i % 2 === 0 ? (i / 2).toString() : ".",
+    };
   });
 
   for (let i = diskSpace.length - 1; i > 0; --i) {
     const entry = diskSpace[i];
     if (entry.val !== ".") {
-      const emptyIdx = diskSpace.findIndex(e => e.val === "." && e.len >= entry.len);
+      const emptyIdx = diskSpace.findIndex(
+        (e) => e.val === "." && e.len >= entry.len,
+      );
       if (emptyIdx > i) {
         continue;
       }
@@ -58,20 +60,21 @@ const part2 = (rawInput) => {
       }
       diskSpace[emptyIdx].len -= entry.len;
       diskSpace.splice(i, 1);
-      diskSpace.splice(i, 0, { len: entry.len, val: "." })
+      diskSpace.splice(i, 0, { len: entry.len, val: "." });
       diskSpace.splice(emptyIdx, 0, entry);
-
     }
   }
 
-  return diskSpace
-    .filter(e => e.len)
-    .flatMap(e => Array(e.len).fill(e.val))
-    .map((n, i) => n === "." ? 0 : +n * i)
-    .reduce(sum);
+  return (
+    diskSpace
+      .filter((e) => e.len)
+      .flatMap((e) => Array(e.len).fill(e.val))
+      .map((n, i) => (n === "." ? 0 : +n * i))
+      .reduce(sum)
+  );
 };
 
-/** 
+/**
  * AoC Runner
  */
 run({

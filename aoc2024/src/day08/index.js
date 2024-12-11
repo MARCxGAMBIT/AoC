@@ -3,8 +3,8 @@ import { parseMatrix } from "../utils/index.js";
 
 class Coord {
   /**
-   * @param {Number} row 
-   * @param {Number} col 
+   * @param {Number} row
+   * @param {Number} col
    */
   constructor(row, col) {
     this.row = row;
@@ -22,7 +22,6 @@ class Coord {
         break;
       }
       result.push(antinode);
-
     } while (++counter !== maxDepth);
     return result;
   }
@@ -36,8 +35,7 @@ class Coord {
   }
 
   valid({ row, col }) {
-    return this.row >= 0 && this.row <= row
-      && this.col >= 0 && this.col <= col;
+    return this.row >= 0 && this.row <= row && this.col >= 0 && this.col <= col;
   }
 
   toString() {
@@ -48,9 +46,9 @@ class Coord {
 const validAntinodes = (coordA, coordB, bounds, maxDepth = -1) => {
   return [
     ...coordA.getValidAntinodes(coordB, bounds, maxDepth),
-    ...coordB.getValidAntinodes(coordA, bounds, maxDepth)
+    ...coordB.getValidAntinodes(coordA, bounds, maxDepth),
   ];
-}
+};
 
 const extractFrequencies = (accu, curr, row) => {
   curr.forEach((antenna, col) => {
@@ -60,11 +58,11 @@ const extractFrequencies = (accu, curr, row) => {
   });
 
   return accu;
-}
+};
 /**
  * Calculate the solution of part 1
- * 
- * @param {string} rawInput 
+ *
+ * @param {string} rawInput
  * @returns {Number} solution to the problem
  */
 const part1 = (rawInput) => {
@@ -75,20 +73,24 @@ const part1 = (rawInput) => {
 
   const antinodes = Object.entries(frequency)
     .map(([_, coords]) => coords)
-    .flatMap((coords) => coords
-      .slice(0, coords.length - 1)
-      .flatMap((coord, i) => coords
-        .slice(i + 1)
-        .flatMap(tmpCoord => validAntinodes(coord, tmpCoord, bounds, 1))))
-    .map(coord => coord.toString());
+    .flatMap((coords) =>
+      coords
+        .slice(0, coords.length - 1)
+        .flatMap((coord, i) =>
+          coords
+            .slice(i + 1)
+            .flatMap((tmpCoord) => validAntinodes(coord, tmpCoord, bounds, 1)),
+        ),
+    )
+    .map((coord) => coord.toString());
 
   return new Set(antinodes).size;
 };
 
 /**
  * Calculate the solution of part 2
- * 
- * @param {string} rawInput 
+ *
+ * @param {string} rawInput
  * @returns {Number} solution to the problem
  */
 const part2 = (rawInput) => {
@@ -99,12 +101,16 @@ const part2 = (rawInput) => {
 
   const antinodes = Object.entries(frequency)
     .map(([_, coords]) => coords)
-    .flatMap((coords) => coords
-      .slice(0, coords.length - 1)
-      .flatMap((coord, i) => coords
-        .slice(i + 1)
-        .flatMap(tmpCoord => validAntinodes(coord, tmpCoord, bounds))))
-    .map(coord => coord.toString());
+    .flatMap((coords) =>
+      coords
+        .slice(0, coords.length - 1)
+        .flatMap((coord, i) =>
+          coords
+            .slice(i + 1)
+            .flatMap((tmpCoord) => validAntinodes(coord, tmpCoord, bounds)),
+        ),
+    )
+    .map((coord) => coord.toString());
 
   return new Set(antinodes).size;
 };

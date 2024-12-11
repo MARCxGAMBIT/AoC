@@ -12,44 +12,58 @@ const valid = (nums, tempResult, considerCon, depth = 0) => {
   const mulValid = divisable(tempResult, curr);
   const conValid = considerCon && endsWith(tempResult, curr);
 
-  return addValid && valid(nums, tempResult - curr, considerCon, depth + 1)
-    || mulValid && valid(nums, tempResult / curr, considerCon, depth + 1)
-    || conValid && valid(nums, (tempResult - curr) / 10 ** (Math.floor(Math.log10(curr)) + 1), considerCon, depth + 1)
-}
+  return (
+    (addValid && valid(nums, tempResult - curr, considerCon, depth + 1)) ||
+    (mulValid && valid(nums, tempResult / curr, considerCon, depth + 1)) ||
+    (conValid &&
+      valid(
+        nums,
+        (tempResult - curr) / 10 ** (Math.floor(Math.log10(curr)) + 1),
+        considerCon,
+        depth + 1,
+      ))
+  );
+};
 
 const endsWith = (a, b) => a.toString().endsWith(b);
 const divisable = (a, b) => a % b === 0;
 const subtractable = (a, b) => a >= b;
 /**
  * Calculate the solution of part 1
- * 
- * @param {string} rawInput 
+ *
+ * @param {string} rawInput
  * @returns {Number} solution to the problem
-*/
+ */
 const part1 = (rawInput) => {
-
-  return parseInput(rawInput)
-    .map(line => line.split(": "))
-    .filter(([testVal, equation]) => valid(equation.split(" ").map(Number).reverse(), +testVal, false))
-    .map(([testVal]) => testVal)
-    .map(Number)
-    .reduce(sum);
+  return (
+    parseInput(rawInput)
+      .map((line) => line.split(": "))
+      .filter(([testVal, equation]) =>
+        valid(equation.split(" ").map(Number).reverse(), +testVal, false),
+      )
+      .map(([testVal]) => testVal)
+      .map(Number)
+      .reduce(sum)
+  );
 };
 
 /**
  * Calculate the solution of part 2
- * 
- * @param {string} rawInput 
+ *
+ * @param {string} rawInput
  * @returns {Number} solution to the problem
  */
 const part2 = (rawInput) => {
-
-  return parseInput(rawInput)
-    .map(line => line.split(": "))
-    .filter(([testVal, equation]) => valid(equation.split(" ").map(Number).reverse(), +testVal, true))
-    .map(([testVal]) => testVal)
-    .map(Number)
-    .reduce(sum);
+  return (
+    parseInput(rawInput)
+      .map((line) => line.split(": "))
+      .filter(([testVal, equation]) =>
+        valid(equation.split(" ").map(Number).reverse(), +testVal, true),
+      )
+      .map(([testVal]) => testVal)
+      .map(Number)
+      .reduce(sum)
+  );
 };
 
 /**

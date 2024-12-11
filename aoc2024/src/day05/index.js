@@ -1,27 +1,35 @@
 import run from "aocrunner";
 import { parseGroupedInput, sum, splitAt } from "../utils/index.js";
 
-const buildHashmap = (acc, [key, value]) => ((acc[key] ??= []).push(value), acc)
-const filterValidWith = (dict) =>
-  messageNums =>
-    messageNums
-      .every((num, i) => (dict[num] ?? []).every(doesRuleApply(messageNums, i)))
+const buildHashmap = (acc, [key, value]) => (
+  (acc[key] ??= []).push(value), acc
+);
+const filterValidWith = (dict) => (messageNums) =>
+  messageNums
+    .every((num, i) => (dict[num] ?? []).every(doesRuleApply(messageNums, i)));
 
-const filterBrokenWith = (dict) =>
-  messageNums =>
-    messageNums
-      .some((num, i) => dict[num] ? dict[num].some(doesRuleNotApply(messageNums, i)) : false)
+const filterBrokenWith = (dict) => (messageNums) =>
+  messageNums
+    .some((num, i) =>
+      dict[num] ? dict[num].some(doesRuleNotApply(messageNums, i)) : false,
+    );
 
-const doesRuleApply = (messageNums, i) => (ruleNum) => messageNums.indexOf(ruleNum) > i || messageNums.indexOf(ruleNum) === -1;
-const doesRuleNotApply = (messageNums, i) => (ruleNum) => messageNums.indexOf(ruleNum) < i && messageNums.indexOf(ruleNum) !== -1;
-const sortWithDict = (dict) => (a, b) => dict[a]?.includes(b) ? -1 : (dict[b]?.includes(a) ? 1 : 0);
-const fixWith = (dict) => messageNums => messageNums.sort(sortWithDict(dict))
-const pickMiddleElement = messageNums => messageNums[~~(messageNums.length / 2)]
+const doesRuleApply = (messageNums, i) => (ruleNum) =>
+  messageNums.indexOf(ruleNum) > i || messageNums.indexOf(ruleNum) === -1;
+const doesRuleNotApply = (messageNums, i) => (ruleNum) =>
+  messageNums.indexOf(ruleNum) < i && messageNums.indexOf(ruleNum) !== -1;
+const sortWithDict = (dict) => (a, b) =>
+  dict[a]?.includes(b) ? -1
+  : dict[b]?.includes(a) ? 1
+  : 0;
+const fixWith = (dict) => (messageNums) => messageNums.sort(sortWithDict(dict));
+const pickMiddleElement = (messageNums) =>
+  messageNums[~~(messageNums.length / 2)];
 
 /**
  * Calculate the solution of part 1
- * 
- * @param {string} rawInput 
+ *
+ * @param {string} rawInput
  * @returns {Number} solution to the problem
  */
 const part1 = (rawInput) => {
@@ -31,17 +39,19 @@ const part1 = (rawInput) => {
     .map(splitAt("|"))
     .reduce(buildHashmap, {});
 
-  return messages.map(splitAt(","))
-    .filter(filterValidWith(dict))
-    .map(pickMiddleElement)
-    .map(Number)
-    .reduce(sum)
+  return (
+    messages.map(splitAt(","))
+      .filter(filterValidWith(dict))
+      .map(pickMiddleElement)
+      .map(Number)
+      .reduce(sum)
+  );
 };
 
 /**
  * Calculate the solution of part 2
- * 
- * @param {string} rawInput 
+ *
+ * @param {string} rawInput
  * @returns {Number} solution to the problem
  */
 const part2 = (rawInput) => {
@@ -51,12 +61,14 @@ const part2 = (rawInput) => {
     .map(splitAt("|"))
     .reduce(buildHashmap, {});
 
-  return messages.map(splitAt(","))
-    .filter(filterBrokenWith(dict))
-    .map(fixWith(dict))
-    .map(pickMiddleElement)
-    .map(Number)
-    .reduce(sum)
+  return (
+    messages.map(splitAt(","))
+      .filter(filterBrokenWith(dict))
+      .map(fixWith(dict))
+      .map(pickMiddleElement)
+      .map(Number)
+      .reduce(sum)
+  );
 };
 
 /**

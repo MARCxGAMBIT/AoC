@@ -6,25 +6,27 @@ const replaceRegex = /(don't\(\)).*?(do\(\))|(don't\(\)).*?$/g;
 
 /**
  * Calculate the solution of part 1
- * 
- * @param {string} rawInput 
+ *
+ * @param {string} rawInput
  * @returns {Number} solution to the problem
  */
 const part1 = (rawInput) => {
   const input = parseInput(rawInput);
 
-  return input
-    .flatMap(line => [...line.matchAll(mulRegex)])
-    .map(match => match[1])
-    .map(splitAt(","))
-    .map(([a, b]) => a * b)
-    .reduce(sum);
+  return (
+    input
+      .flatMap((line) => [...line.matchAll(mulRegex)])
+      .map((match) => match[1])
+      .map(splitAt(","))
+      .map(([a, b]) => a * b)
+      .reduce(sum)
+  );
 };
 
 /**
  * Calculate the solution of part 2
- * 
- * @param {string} rawInput 
+ *
+ * @param {string} rawInput
  * @returns {Number} solution to the problem
  */
 const part2 = (rawInput) => {
@@ -32,15 +34,17 @@ const part2 = (rawInput) => {
 
   const inputLine = input.join("");
 
-  return [
-    ...inputLine
-      .replaceAll(replaceRegex, "")
-      .matchAll(mulRegex)
-  ]
-    .map(match => match[1])
-    .map(splitAt(","))
-    .map(([a, b]) => a * b)
-    .reduce(sum);
+  return (
+    [
+      ...inputLine
+        .replaceAll(replaceRegex, "")
+        .matchAll(mulRegex),
+    ]
+      .map((match) => match[1])
+      .map(splitAt(","))
+      .map(([a, b]) => a * b)
+      .reduce(sum)
+  );
 };
 
 /**
@@ -72,7 +76,7 @@ run({
         mul(4,3)don't()mul(4,5)
 `,
         expected: 80,
-      }
+      },
     ],
     solution: part2,
   },

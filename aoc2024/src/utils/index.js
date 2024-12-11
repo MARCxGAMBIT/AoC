@@ -23,56 +23,63 @@
  *     import { myUtil } from '../utils'
  */
 
-export const parseInput =
-    (rawInput) => rawInput.split("\n").map((line) => line.trim())
+export const parseInput = (rawInput) =>
+  rawInput.split("\n").map((line) => line.trim());
 
 export const parseTable = (rawInput) =>
-    rawInput
-        .split("\n")
-        .map(line => line.trim().split(/\s+/))
+  rawInput
+    .split("\n")
+    .map((line) => line.trim().split(/\s+/));
 
 export const parseMatrix = (rawInput) =>
-    rawInput
-        .split("\n")
-        .map((line) => line.trim().split(""))
+  rawInput
+    .split("\n")
+    .map((line) => line.trim().split(""));
 
 export const parseNumMatrix = (rawInput) =>
-    rawInput
-        .split("\n")
-        .map((line) => line.trim().split("").map(Number))
+  rawInput
+    .split("\n")
+    .map((line) => line.trim().split("").map(Number));
 
 export const parseGroupedInput = (rawInput) =>
-    rawInput
-        .split("\n\n")
-        .map((group) => group.split("\n")
-            .map((line) => line.trim()))
+  rawInput
+    .split("\n\n")
+    .map((group) =>
+      group.split("\n")
+        .map((line) => line.trim()),
+    );
 
-export const transpose = (matrix) => matrix[0].map((_, colIndex) => matrix.map((row) => row[colIndex]));
+export const transpose = (matrix) =>
+  matrix[0].map((_, colIndex) => matrix.map((row) => row[colIndex]));
 
-export const rotateClockwise = (matrix) => matrix[0].map((val, index) => matrix.map(row => row[index]).reverse())
+export const rotateClockwise = (matrix) =>
+  matrix[0].map((val, index) => matrix.map((row) => row[index]).reverse());
 
-export const rotateCounterClockwise = (matrix) => matrix[0].map((val, index) => matrix.map(row => row[row.length - 1 - index]));
+export const rotateCounterClockwise = (matrix) =>
+  matrix[0].map((val, index) =>
+    matrix.map((row) => row[row.length - 1 - index]),
+  );
 
-export const ascending = (a, b) => a - b
+export const ascending = (a, b) => a - b;
 
-export const descending = (a, b) => b - a
+export const descending = (a, b) => b - a;
 
-export const sum = (a, b) => a + b
+export const sum = (a, b) => a + b;
 
-export const prod = (a, b) => a * b
+export const prod = (a, b) => a * b;
 
-export const splitAt = (delimiter) => (message) => message.split(delimiter)
+export const splitAt = (delimiter) => (message) => message.split(delimiter);
 
 export const cache = (fn) => {
-    const mem = new Map();
-    return function(...args) {
-        const key = JSON.stringify(args);
-        if (mem.has(key)) {
-            return mem.get(key);
-        }
-
-        const result = fn.apply(this, args);
-        mem.set(key, result);
-        return result;
+  const mem = new Map();
+  return function (...args) {
+    const key = JSON.stringify(args);
+    if (mem.has(key)) {
+      return mem.get(key);
     }
-}
+
+    const result = fn.apply(this, args);
+    mem.set(key, result);
+    return result;
+  };
+};
