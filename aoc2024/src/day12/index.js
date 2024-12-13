@@ -48,14 +48,15 @@ const explorePlot = (row, col, map, region, regions, visited) => {
   for (const [i, neighbor] of straightNeighbors.entries()) {
     const diagNeighbor = diagonalNeighbors[i];
     const nextNeighbor = straightNeighbors[(i + 1) % straightNeighbors.length];
-    if (
-      (neighbor.plot !== plot && nextNeighbor.plot !== plot) ||
-      (neighbor.plot === plot &&
-        diagNeighbor.plot !== plot &&
-        nextNeighbor.plot === plot)
-    ) {
-      regions[region].edges++;
-    }
+
+    const isOuterEdge = neighbor.plot !== plot && nextNeighbor.plot !== plot;
+    const isInnerEdge =
+      neighbor.plot === plot &&
+      diagNeighbor.plot !== plot &&
+      nextNeighbor.plot === plot;
+
+    regions[region].edges += Number(isOuterEdge || isInnerEdge);
+
     if (neighbor.plot === plot) {
       regions[region].perimeter--;
       explorePlot(...neighbor.coords, map, region, regions, visited);
