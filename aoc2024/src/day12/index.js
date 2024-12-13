@@ -7,16 +7,25 @@ const straightDirs = {
   S: [1, 0],
   W: [0, -1],
 };
-const allDirs = {
-  N: [-1, 0],
+
+const diagonalDirs = {
   NE: [-1, 1],
-  E: [0, 1],
   SE: [1, 1],
-  S: [1, 0],
   SW: [1, -1],
-  W: [0, -1],
   NW: [-1, -1],
 };
+
+const inspectNeighbor =
+  (map, row, col) =>
+  ([r, c]) => ({
+    plot: map[row + r]?.[col + c] ?? ".",
+    coords: [row + r, col + c],
+  });
+
+const createVisited = (matrix) =>
+  Array.from({ length: matrix.length }, () =>
+    Array.from({ length: matrix[0].length }, () => false),
+  );
 
 const explorePlot = (row, col, map, region, regions, visited) => {
   if (visited[row][col]) {
@@ -24,54 +33,33 @@ const explorePlot = (row, col, map, region, regions, visited) => {
   }
   visited[row][col] = true;
   const plot = map[row][col];
-  const neighbors = Object.values(straightDirs)
-    .map(([r, c]) => [row + r, col + c])
-    .filter(([r, c]) => map[r]?.[c] === plot);
 
-  regions[region] ??= { perimeter: 0, area: 0 };
+  const straightNeighbors = Object
+    .values(straightDirs)
+    .map(inspectNeighbor(map, row, col));
+  const diagonalNeighbors = Object
+    .values(diagonalDirs)
+    .map(inspectNeighbor(map, row, col));
+
+  regions[region] ??= { edges: 0, area: 0, perimeter: 0 };
   regions[region].area++;
-  regions[region].perimeter += 4 - neighbors.length;
+  regions[region].perimeter += 4;
 
-  for (const neighbor of neighbors) {
-    explorePlot(...neighbor, map, region, regions, visited);
-  }
-};
-
-const explorePlot2 = (row, col, map, region, regions, visited) => {
-  if (visited[row][col]) {
-    return;
-  }
-  visited[row][col] = true;
-  const plot = map[row][col];
-  const neighbors = Object.values(allDirs)
-    .map(([r, c]) => [row + r, col + c]);
-
-  const neighborPlots = neighbors.map(([r, c]) =>
-    map[r]?.[c] === plot ? plot : ".",
-  );
-
-  regions[region] ??= { edges: 0, area: 0 };
-  regions[region].area++;
-
-  for (let i = 1; i < neighborPlots.length; i += 2) {
+  for (const [i, neighbor] of straightNeighbors.entries()) {
+    const diagNeighbor = diagonalNeighbors[i];
+    const nextNeighbor = straightNeighbors[(i + 1) % straightNeighbors.length];
     if (
-      neighborPlots[i - 1] !== plot &&
-      neighborPlots[(i + 1) % neighborPlots.length] !== plot
-    ) {
-      regions[region].edges++;
-    } else if (
-      neighborPlots[i - 1] === plot &&
-      neighborPlots[i] !== plot &&
-      neighborPlots[(i + 1) % neighborPlots.length] === plot
+      (neighbor.plot !== plot && nextNeighbor.plot !== plot) ||
+      (neighbor.plot === plot &&
+        diagNeighbor.plot !== plot &&
+        nextNeighbor.plot === plot)
     ) {
       regions[region].edges++;
     }
-  }
-
-  for (const neighbor of neighbors
-    .filter((_, i) => i % 2 === 0)
-    .filter(([r, c]) => map[r]?.[c] === plot)) {
-    explorePlot2(...neighbor, map, region, regions, visited);
+    if (neighbor.plot === plot) {
+      regions[region].perimeter--;
+      explorePlot(...neighbor.coords, map, region, regions, visited);
+    }
   }
 };
 
@@ -82,18 +70,14 @@ const explorePlot2 = (row, col, map, region, regions, visited) => {
  * @returns {Number} solution to the problem
  */
 const part1 = (rawInput) => {
-  const input = parseMatrix(rawInput);
-
-  const visited = Array.from({ length: input.length }, () =>
-    Array.from({ length: input[0].length }, () => false),
-  );
-
+  const matrix = parseMatrix(rawInput);
+  const visited = createVisited(matrix);
   const regions = {};
 
-  for (let row = 0; row < input.length; row++) {
-    for (let col = 0; col < input[row].length; col++) {
+  for (let row = 0; row < matrix.length; row++) {
+    for (let col = 0; col < matrix[row].length; col++) {
       if (!visited[row][col]) {
-        explorePlot(row, col, input, `${row},${col}`, regions, visited);
+        explorePlot(row, col, matrix, `${row},${col}`, regions, visited);
       }
     }
   }
@@ -101,7 +85,7 @@ const part1 = (rawInput) => {
   return (
     Object
       .values(regions)
-      .map((region) => region.area * region.perimeter)
+      .map(({ area, perimeter }) => area * perimeter)
       .reduce(sum)
   );
 };
@@ -113,18 +97,14 @@ const part1 = (rawInput) => {
  * @returns {Number} solution to the problem
  */
 const part2 = (rawInput) => {
-  const input = parseMatrix(rawInput);
-
-  const visited = Array.from({ length: input.length }, () =>
-    Array.from({ length: input[0].length }, () => false),
-  );
-
+  const matrix = parseMatrix(rawInput);
+  const visited = createVisited(matrix);
   const regions = {};
 
-  for (let row = 0; row < input.length; row++) {
-    for (let col = 0; col < input[row].length; col++) {
+  for (let row = 0; row < matrix.length; row++) {
+    for (let col = 0; col < matrix[row].length; col++) {
       if (!visited[row][col]) {
-        explorePlot2(row, col, input, `${row},${col}`, regions, visited);
+        explorePlot(row, col, matrix, `${row},${col}`, regions, visited);
       }
     }
   }
@@ -132,7 +112,7 @@ const part2 = (rawInput) => {
   return (
     Object
       .values(regions)
-      .map((region) => region.area * region.edges)
+      .map(({ area, edges }) => area * edges)
       .reduce(sum)
   );
 };
@@ -217,5 +197,5 @@ MMMISSJEEE`,
     solution: part2,
   },
   trimTestInputs: true,
-  onlyTests: true,
+  onlyTests: false,
 });

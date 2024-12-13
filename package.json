@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "AoC collection",
   "scripts": {
-    "format": "prettier -w",
+    "format": "prettier -w -u .",
     "lint": "eslint **/*.js",
     "lint:fix": "eslint --fix **/*.js",
     "prepare": "husky"
