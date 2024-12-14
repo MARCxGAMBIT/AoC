@@ -34,9 +34,11 @@ const part1 = (rawInput) => {
       return acc;
     }, {});
 
-  return Object.values(quadrants)
-    .map((q) => q.length)
-    .reduce(prod);
+  return (
+    Object.values(quadrants)
+      .map((q) => q.length)
+      .reduce(prod)
+  );
 };
 
 /**
@@ -46,8 +48,8 @@ const part1 = (rawInput) => {
  * @returns {Number} solution to the problem
  */
 const part2 = (rawInput) => {
-  const cols = rawInput.includes("test") ? 11 : 101; // x
-  const rows = rawInput.includes("test") ? 7 : 103; // y
+  const cols = rawInput.includes("test") ? 11 : 101;
+  const rows = rawInput.includes("test") ? 7 : 103;
 
   const coords = parseInput(rawInput)
     .map((line) => line.matchAll(regex))
