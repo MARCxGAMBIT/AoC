@@ -83,3 +83,13 @@ export const cache = (fn) => {
     return result;
   };
 };
+
+export const findSymbol = (matrix, symbol) => {
+  for (let row = 0; row < matrix.length; row++) {
+    for (let col = 0; col < matrix[row].length; col++) {
+      if (matrix[row][col] === symbol) {
+        return [row, col];
+      }
+    }
+  }
+};
