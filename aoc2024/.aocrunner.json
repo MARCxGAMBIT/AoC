@@ -121,13 +121,13 @@
         "attempts": [
           "399"
         ],
-        "time": 0.588
+        "time": 0.4385
       },
       "part2": {
         "solved": true,
         "result": "1277",
         "attempts": [],
-        "time": 1.6298
+        "time": 1.1637
       }
     },
     {
@@ -240,13 +240,15 @@
         "attempts": [
           "105516"
         ],
-        "time": 148.6238
+        "time": 148.7074
       },
       "part2": {
         "solved": false,
-        "result": null,
-        "attempts": [],
-        "time": null
+        "result": "951",
+        "attempts": [
+          "951"
+        ],
+        "time": 186.8802
       }
     },
     {

@@ -1,8 +1,6 @@
 import globals from "globals";
 import js from "@eslint/js";
 
-console.log(globals);
-
 export default [
   {
     ignores: ["**/template/**/*"],

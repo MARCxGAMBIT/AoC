@@ -1,13 +1,5 @@
 import run from "aocrunner";
-import {
-  parseInput,
-  parseGroupedInput,
-  parseMatrix,
-  parseTable,
-  ascending,
-  sum,
-  findSymbol,
-} from "../utils/index.js";
+import { parseMatrix, findSymbol } from "../utils/index.js";
 
 const dirs = [
   [0, 1],
@@ -34,6 +26,38 @@ class PriorityQueue {
     return this.elements.length === 0;
   }
 }
+
+const getSiblings = (current, costs) => {
+  const [row, col, dir] = current;
+  const currentCost = costs[current];
+  const otherDirs = dirs.map((_, i) => i).filter((i) => i !== dir);
+  return otherDirs
+    .map((i) => [row, col, i])
+    .filter((sibling) => costs[sibling] <= currentCost + 1000);
+};
+
+const backtrack = (start, current, costs, came_from, visited) => {
+  if (current.slice(0, 2).toString() === start.toString()) {
+    return;
+  }
+
+  let todos = [came_from[current]];
+  if (Object.keys(visited).length > 1) {
+    todos.push(
+      ...getSiblings(current, costs).map((sibling) => came_from[sibling]),
+    );
+  }
+
+  for (let todo of todos) {
+    let [row, col] = todo;
+    if (visited[[row, col]]) {
+      continue;
+    }
+
+    visited[[row, col]] = true;
+    backtrack(start, todo, costs, came_from, visited);
+  }
+};
 
 /**
  * Calculate the solution of part 1
@@ -127,8 +151,6 @@ const part2 = (rawInput) => {
     }
   }
 
-  console.log(came_from);
-
   let min = Infinity;
   let minDir = -1;
   for (let i = 0; i < dirs.length; ++i) {
@@ -139,12 +161,15 @@ const part2 = (rawInput) => {
   }
 
   let node = [...end, minDir];
-  let counter = 0;
-  while (node && node.toString() !== start.toString()) {
-    counter++;
-    node = came_from[node];
+  let visited = { [end]: true };
+  backtrack(start, node, costs, came_from, visited);
+
+  const copy = structuredClone(input);
+  for (let coord of Object.keys(visited)) {
+    const [row, col] = coord.split(",").map(Number);
+    copy[row][col] = "O";
   }
-  return counter;
+  return Object.keys(visited).length;
 };
 
 /**
@@ -238,5 +263,5 @@ run({
     solution: part2,
   },
   trimTestInputs: true,
-  onlyTests: true,
+  onlyTests: false,
 });
