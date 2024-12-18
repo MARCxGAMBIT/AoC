@@ -256,13 +256,13 @@
         "solved": true,
         "result": "1,5,0,1,7,4,1,0,3",
         "attempts": [],
-        "time": 0.2145
+        "time": 0.0815
       },
       "part2": {
-        "solved": false,
-        "result": null,
+        "solved": true,
+        "result": "47910079998866",
         "attempts": [],
-        "time": null
+        "time": 3.6426
       }
     },
     {

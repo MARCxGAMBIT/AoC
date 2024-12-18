@@ -5,7 +5,7 @@ const mod = (n, m) => ((n % m) + m) % m;
 const execute = (registerA, registerB, registerC, program) => {
   const instructions = {
     0: (operand) => (
-      (registerA = Math.floor(registerA >> convertComboOperand(operand))),
+      (registerA = Math.floor(registerA / 2 ** convertComboOperand(operand))),
       undefined
     ),
     1: (operand) => ((registerB ^= operand), undefined),
@@ -18,11 +18,11 @@ const execute = (registerA, registerB, registerC, program) => {
       output.push(mod(convertComboOperand(operand), 8)), undefined
     ),
     6: (operand) => (
-      (registerB = Math.floor(registerA >> convertComboOperand(operand))),
+      (registerB = Math.floor(registerA / 2 ** convertComboOperand(operand))),
       undefined
     ),
     7: (operand) => (
-      (registerC = Math.floor(registerA >> convertComboOperand(operand))),
+      (registerC = Math.floor(registerA / 2 ** convertComboOperand(operand))),
       undefined
     ),
   };
