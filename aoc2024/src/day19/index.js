@@ -1,34 +1,14 @@
 import run from "aocrunner";
 import { parseGroupedInput, cache } from "../utils/index.js";
 
-const backtrack = (patterns, design, partialDesign) => {
+const backtrack = cache((patterns, partialDesign) => {
   if (partialDesign.length === 0) {
     return 1;
   }
   let found = 0;
   for (let pattern of patterns) {
     if (partialDesign.indexOf(pattern) === 0) {
-      found = backtrack(patterns, design, partialDesign.slice(pattern.length));
-    }
-    if (found) {
-      break;
-    }
-  }
-  return found;
-};
-
-const backtrack2 = cache((patterns, design, partialDesign) => {
-  if (partialDesign.length === 0) {
-    return 1;
-  }
-  let found = 0;
-  for (let pattern of patterns) {
-    if (partialDesign.indexOf(pattern) === 0) {
-      found += backtrack2(
-        patterns,
-        design,
-        partialDesign.slice(pattern.length),
-      );
+      found += backtrack(patterns, partialDesign.slice(pattern.length));
     }
   }
   return found;
@@ -46,7 +26,7 @@ const part1 = (rawInput) => {
 
   let counter = 0;
   for (let design of designs) {
-    counter += backtrack(patterns, design, design);
+    counter += backtrack(patterns, design) > 0 ? 1 : 0;
   }
 
   return counter;
@@ -64,7 +44,7 @@ const part2 = (rawInput) => {
 
   let counter = 0;
   for (let design of designs) {
-    counter += backtrack2(patterns, design, design);
+    counter += backtrack(patterns, design);
   }
 
   return counter;
