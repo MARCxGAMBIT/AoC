@@ -93,3 +93,19 @@ export const findSymbol = (matrix, symbol) => {
     }
   }
 };
+
+export const stringPermutations = (str) =>
+  str.length <= 1 ?
+    [str]
+  : [...str].flatMap((char, i) =>
+      stringPermutations(str.slice(0, i) + str.slice(i + 1))
+        .map((p) => char + p),
+    );
+
+export const listPermutations = (arr) =>
+  arr.length <= 1 ?
+    [arr]
+  : arr.flatMap((val, i) =>
+      listPermutations([...arr.slice(0, i), ...arr.slice(i + 1)])
+        .map((p) => [val, ...p]),
+    );
