@@ -300,7 +300,7 @@
         "attempts": [
           "6813"
         ],
-        "time": 288.6491
+        "time": 998.012
       },
       "part2": {
         "solved": true,
@@ -309,15 +309,18 @@
           "1010325",
           "1006287"
         ],
-        "time": 294.9548
+        "time": 3582.2867
       }
     },
     {
       "part1": {
         "solved": false,
-        "result": null,
-        "attempts": [],
-        "time": null
+        "result": "96396",
+        "attempts": [
+          "96396",
+          "93240"
+        ],
+        "time": 0.1049
       },
       "part2": {
         "solved": false,
