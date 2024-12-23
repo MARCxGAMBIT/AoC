@@ -9,7 +9,6 @@ import { parseInput } from "../utils/index.js";
  */
 const part1 = (rawInput) => {
   const input = parseInput(rawInput);
-
   const graph = {};
 
   input.forEach((line) => {
@@ -48,7 +47,6 @@ const part1 = (rawInput) => {
  */
 const part2 = (rawInput) => {
   const input = parseInput(rawInput);
-
   const graph = {};
 
   input.forEach((line) => {
@@ -74,23 +72,22 @@ const part2 = (rawInput) => {
     }
   }
 
+  const occurencesInThreeways = (comp) => ({
+    comp,
+    len: [...threeways].filter((t) => t.includes(comp)).length,
+  });
+  const descending = (a, b) => b.len - a.len;
+  const addToClique = (clique, { comp }) => (
+    clique.every((c) => graph[c].has(comp)) ? clique.push(comp) : 0, clique
+  );
+
   return (
     computers
-      .map((comp) => {
-        return {
-          comp,
-          len: [...threeways].filter((t) => t.includes(comp)).length,
-        };
-      })
-      .toSorted((a, b) => b.len - a.len)
-      .reduce(
-        (clique, { comp }) => (
-          clique.every((c) => graph[c].has(comp)) ? clique.push(comp) : 0,
-          clique
-        ),
-        [],
-      )
-      .sort().join(",")
+      .map(occurencesInThreeways)
+      .sort(descending)
+      .reduce(addToClique, [])
+      .sort()
+      .join(",")
   );
 };
 

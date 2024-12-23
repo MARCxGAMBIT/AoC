@@ -354,13 +354,13 @@
         "attempts": [
           "2332"
         ],
-        "time": 16.8076
+        "time": 14.7591
       },
       "part2": {
         "solved": true,
         "result": "cb,df,fo,ho,kk,nw,ox,pq,rt,sf,tq,wi,xz",
         "attempts": [],
-        "time": 168.4508
+        "time": 167.6958
       }
     },
     {
