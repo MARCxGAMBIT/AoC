@@ -240,7 +240,7 @@
         "attempts": [
           "105516"
         ],
-        "time": 69.0727
+        "time": 63.5266
       },
       "part2": {
         "solved": false,
@@ -250,7 +250,7 @@
           "593",
           "582"
         ],
-        "time": 4696.1991
+        "time": 3909.2651
       }
     },
     {
@@ -354,13 +354,13 @@
         "attempts": [
           "2332"
         ],
-        "time": 14.3685
+        "time": 16.8076
       },
       "part2": {
-        "solved": false,
-        "result": null,
+        "solved": true,
+        "result": "cb,df,fo,ho,kk,nw,ox,pq,rt,sf,tq,wi,xz",
         "attempts": [],
-        "time": null
+        "time": 168.4508
       }
     },
     {

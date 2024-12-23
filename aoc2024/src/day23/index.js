@@ -10,26 +10,24 @@ import { parseInput } from "../utils/index.js";
 const part1 = (rawInput) => {
   const input = parseInput(rawInput);
 
-  const connections = {};
-  const computers = new Set();
+  const graph = {};
 
   input.forEach((line) => {
     const [from, to] = line.split("-");
-    computers.add(from);
-    computers.add(to);
 
-    (connections[from] ??= new Set()).add(to);
-    (connections[to] ??= new Set()).add(from);
+    (graph[from] ??= new Set()).add(to);
+    (graph[to] ??= new Set()).add(from);
   });
 
+  const computers = Object.keys(graph);
   const threeways = {};
 
   for (let mainComp of computers) {
-    const mainConnections = connections[mainComp];
-    for (let secondComp of mainConnections) {
-      const secondaryConnections = connections[secondComp];
-      for (let thirdComp of secondaryConnections) {
-        if (mainConnections.has(thirdComp)) {
+    const neighbors = graph[mainComp];
+    for (let secondComp of neighbors) {
+      const secondaryNeighbors = graph[secondComp];
+      for (let thirdComp of secondaryNeighbors) {
+        if (neighbors.has(thirdComp)) {
           const threeway = [mainComp, secondComp, thirdComp];
           if (threeway.some((comp) => comp.startsWith("t"))) {
             threeways[threeway.sort()] = true;
@@ -51,36 +49,49 @@ const part1 = (rawInput) => {
 const part2 = (rawInput) => {
   const input = parseInput(rawInput);
 
-  const connections = {};
-  const computers = new Set();
+  const graph = {};
 
   input.forEach((line) => {
     const [from, to] = line.split("-");
-    computers.add(from);
-    computers.add(to);
 
-    (connections[from] ??= new Set()).add(to);
-    (connections[to] ??= new Set()).add(from);
+    (graph[from] ??= new Set()).add(to);
+    (graph[to] ??= new Set()).add(from);
   });
 
-  const threeways = {};
+  const computers = Object.keys(graph);
+  const threeways = new Set();
 
   for (let mainComp of computers) {
-    const mainConnections = connections[mainComp];
+    const mainConnections = graph[mainComp];
     for (let secondComp of mainConnections) {
-      const secondaryConnections = connections[secondComp];
+      const secondaryConnections = graph[secondComp];
       for (let thirdComp of secondaryConnections) {
         if (mainConnections.has(thirdComp)) {
           const threeway = [mainComp, secondComp, thirdComp];
-          if (threeway.some((comp) => comp.startsWith("t"))) {
-            threeways[threeway.sort()] = true;
-          }
+          threeways.add(threeway.sort().join(","));
         }
       }
     }
   }
 
-  // loop at triplets
+  return (
+    computers
+      .map((comp) => {
+        return {
+          comp,
+          len: [...threeways].filter((t) => t.includes(comp)).length,
+        };
+      })
+      .toSorted((a, b) => b.len - a.len)
+      .reduce(
+        (clique, { comp }) => (
+          clique.every((c) => graph[c].has(comp)) ? clique.push(comp) : 0,
+          clique
+        ),
+        [],
+      )
+      .sort().join(",")
+  );
 };
 
 /**
