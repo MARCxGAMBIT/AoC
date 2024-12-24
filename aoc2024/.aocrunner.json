@@ -365,16 +365,16 @@
     },
     {
       "part1": {
-        "solved": false,
-        "result": null,
+        "solved": true,
+        "result": "57082907297510",
         "attempts": [],
-        "time": null
+        "time": 1.1826
       },
       "part2": {
-        "solved": false,
-        "result": null,
+        "solved": true,
+        "result": "ckj,dbp,fdv,kdf,rpp,z15,z23,z39",
         "attempts": [],
-        "time": null
+        "time": 3.1106
       }
     },
     {
