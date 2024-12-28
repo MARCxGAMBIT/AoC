@@ -1,5 +1,5 @@
 import run from "aocrunner";
-import { parseInput, parseGroupedInput } from "../utils/index.js";
+import { parseGroupedInput } from "../utils/index.js";
 
 const evalGate = (gate, gateConnections, initValues) => {
   const connection = gateConnections[gate];
@@ -24,6 +24,52 @@ const evalGate = (gate, gateConnections, initValues) => {
   if (op === "XOR") {
     return op1Value ^ op2Value;
   }
+};
+
+const isConnectionValid = (gate, gateConnections, maxZ) => {
+  const connection = gateConnections[gate];
+  const [op1, op, op2] = connection.split(" ");
+
+  // all z gates (except the last one) must result from an XOR gate
+  if (gate.startsWith("z") && op !== "XOR" && gate !== maxZ) {
+    return false;
+  }
+  // XOR gates either combine x and y gate or result in a z gate
+  if (
+    op === "XOR" &&
+    !(
+      gate.startsWith("z") ||
+      op1.startsWith("x") ||
+      op1.startsWith("y") ||
+      op2.startsWith("x") ||
+      op2.startsWith("y")
+    )
+  ) {
+    return false;
+  }
+  // AND gates must lead to an OR gate (except for the first input)
+  if (op == "AND" && ![op1, op2].includes("x00")) {
+    if (
+      Object.entries(gateConnections).some(([_, conn]) => {
+        const [parentOp1, parentOp, parentOp2] = conn.split(" ");
+        return parentOp !== "OR" && (gate === parentOp1 || gate === parentOp2);
+      })
+    ) {
+      return false;
+    }
+  }
+  // XOR gates must lead to an XOR gate or AND gate
+  if (op === "XOR") {
+    if (
+      Object.entries(gateConnections).some(([_, conn]) => {
+        const [subOp1, subOp, subOp2] = conn.split(" ");
+        return subOp === "OR" && (gate === subOp1 || gate === subOp2);
+      })
+    ) {
+      return false;
+    }
+  }
+  return true;
 };
 
 /**
@@ -60,8 +106,9 @@ const part1 = (rawInput) => {
   return parseInt(binary, 2);
 };
 
+// eslint-disable-next-line no-unused-vars
 const nestedLog = (gateConnections, start, depth = 0) => {
-  if (depth > 3) {
+  if (depth > 5) {
     return;
   }
   console.log("  ".repeat(depth), start, gateConnections[start]);
@@ -99,35 +146,14 @@ const part2 = (rawInput) => {
     gateConnections[gate] = evalGate(gate, gateConnections, initValues);
   });
 
-  const z = Object.entries(gateConnections)
-    .filter(
-      ([gate]) =>
-        gate.startsWith("x") || gate.startsWith("y") || gate.startsWith("z"),
-    )
-    .sort((a, b) => b[0].localeCompare(a[0]))
-    .map(([_, value]) => value)
-    .join("");
-
-  const x = Object.entries(initValues)
-    .filter(([gate]) => gate.startsWith("x"))
-    .sort((a, b) => b[0].localeCompare(a[0]))
-    .map(([_, value]) => value)
-    .join("");
-
-  const y = Object.entries(initValues)
-    .filter(([gate]) => gate.startsWith("y"))
-    .sort((a, b) => b[0].localeCompare(a[0]))
-    .map(([_, value]) => value)
-    .join("");
-
-  // use the following logs to debug nodes and find wrong bits
-  // do swaps manually in input.txt
-  console.log(nestedLog(originalCons, "z15"));
-  console.log({ z: parseInt(z, 2), r: parseInt(x, 2) + parseInt(y, 2) });
-  console.log({ x, y, z });
-
-  // manually return the correct value
-  return "ckj,dbp,fdv,kdf,rpp,z15,z23,z39";
+  const maxZ = Object.keys(gateConnections)
+    .filter((gate) => gate.startsWith("z"))
+    .sort()
+    .pop();
+  const invalidGates = Object.keys(originalCons).filter(
+    (gate) => !isConnectionValid(gate, originalCons, maxZ),
+  );
+  return invalidGates.sort().join(",");
 };
 
 /**

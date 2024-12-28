@@ -256,15 +256,15 @@
     {
       "part1": {
         "solved": true,
-        "result": "1,5,0,1,7,4,1,0,3",
+        "result": "3,1,4,3,1,7,1,6,3",
         "attempts": [],
-        "time": 0.0815
+        "time": 0.1186
       },
       "part2": {
         "solved": true,
-        "result": "47910079998866",
+        "result": "37221270076916",
         "attempts": [],
-        "time": 3.6426
+        "time": 4.4674
       }
     },
     {
@@ -366,15 +366,15 @@
     {
       "part1": {
         "solved": true,
-        "result": "57082907297510",
+        "result": "57632654722854",
         "attempts": [],
-        "time": 1.1826
+        "time": 1.0694
       },
       "part2": {
         "solved": true,
         "result": "ckj,dbp,fdv,kdf,rpp,z15,z23,z39",
         "attempts": [],
-        "time": 3.1106
+        "time": 10.5741
       }
     },
     {
