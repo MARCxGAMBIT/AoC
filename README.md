@@ -16,7 +16,7 @@
 
 [![2023](https://badgen.net/badge/2023/50%20of%2050/green?icon=adventofcode)](aoc2023)
 
-[![2022](https://badgen.net/badge/2022/8%20of%2050/orange?icon=adventofcode)](aoc2024)
+[![2022](https://badgen.net/badge/2022/8%20of%2050/orange?icon=adventofcode)](aoc2022)
 
 [![2021](https://badgen.net/badge/2021/0%20of%2050/red?icon=adventofcode)](.)
 
