@@ -20,5 +20,8 @@
   },
   "lint-staged": {
     "*": "prettier -w -u"
+  },
+  "dependencies": {
+    "aocrunner": "^1.10.0"
   }
 }
